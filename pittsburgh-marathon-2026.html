@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pittsburgh Marathon 2026 — Aidan Giannelli Race Plan</title>
+<style>
+  :root {
+    --gold: #FFB81C;
+    --dark: #1a1a2e;
+    --navy: #16213e;
+    --blue: #0f3460;
+    --accent: #e94560;
+    --green: #00b894;
+    --text: #f0f0f0;
+    --muted: #a0a0b0;
+    --card: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 50%, #1a0a2e 100%);
+    padding: 60px 24px 48px;
+    text-align: center;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, rgba(255,184,28,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .hero-goals {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .goal-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 32px;
+    min-width: 160px;
+  }
+  .goal-card.primary { border-color: var(--gold); background: rgba(255,184,28,0.1); }
+  .goal-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .goal-time {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gold);
+  }
+  .goal-pace {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-val { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+  .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* SECTIONS */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ELEVATION CHART */
+  .elevation-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .elevation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .elevation-meta { font-size: 0.85rem; color: var(--muted); }
+  canvas#elevCanvas {
+    width: 100%;
+    height: 180px;
+    display: block;
+    cursor: crosshair;
+  }
+  .elev-tooltip {
+    position: absolute;
+    background: rgba(26,26,46,0.95);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    pointer-events: none;
+    display: none;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  /* SPLIT TABLE */
+  .split-table-wrap { overflow-x: auto; }
+  table.splits {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  table.splits th {
+    background: rgba(255,184,28,0.15);
+    color: var(--gold);
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  table.splits td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.splits tr:last-child td { border-bottom: none; }
+  table.splits tr:hover td { background: rgba(255,255,255,0.04); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-easy { background: rgba(0,184,148,0.2); color: var(--green); }
+  .pill-tempo { background: rgba(255,184,28,0.2); color: var(--gold); }
+  .pill-race { background: rgba(233,69,96,0.2); color: var(--accent); }
+  .pill-goal { background: rgba(255,184,28,0.3); color: var(--gold); border: 1px solid var(--gold); }
+
+  /* ZONE ACCORDION */
+  .zone-accordion { display: flex; flex-direction: column; gap: 10px; }
+  .zone-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .zone-item:hover { border-color: rgba(255,255,255,0.2); }
+  .zone-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    gap: 16px;
+    user-select: none;
+  }
+  .zone-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .zone-info { flex: 1; }
+  .zone-name { font-weight: 700; font-size: 1rem; }
+  .zone-range { font-size: 0.8rem; color: var(--muted); }
+  .zone-hr { font-size: 0.85rem; text-align: right; }
+  .zone-caret {
+    font-size: 12px;
+    color: var(--muted);
+    transition: transform 0.2s;
+    margin-left: 12px;
+  }
+  .zone-item.open .zone-caret { transform: rotate(180deg); }
+  .zone-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+  .zone-item.open .zone-body { display: block; }
+  .zone-desc { color: var(--muted); font-size: 0.88rem; margin-top: 12px; margin-bottom: 12px; }
+  .zone-cues { list-style: none; }
+  .zone-cues li {
+    font-size: 0.85rem;
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .zone-cues li::before { content: '→'; color: var(--gold); flex-shrink: 0; }
+
+  /* FUELING TIMELINE */
+  .fuel-timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .fuel-timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green), var(--gold), var(--accent));
+    border-radius: 2px;
+  }
+  .fuel-event {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .fuel-event::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--dark);
+  }
+  .fuel-event.water::before { background: #74b9ff; }
+  .fuel-event.gel::before { background: var(--green); }
+  .fuel-event.pre::before { background: var(--muted); }
+  .fuel-mi { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .fuel-action { font-weight: 600; font-size: 0.95rem; }
+  .fuel-note { font-size: 0.82rem; color: var(--muted); }
+
+  /* IF/THEN FLIP CARDS */
+  .flip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .flip-card {
+    height: 160px;
+    perspective: 800px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 20px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .flip-front {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .flip-back {
+    background: rgba(255,184,28,0.08);
+    border: 1px solid var(--gold);
+    transform: rotateY(180deg);
+  }
+  .flip-if {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .flip-cond { font-weight: 700; font-size: 1rem; }
+  .flip-then-lbl {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .flip-action { font-size: 0.9rem; font-weight: 600; }
+  .flip-hint { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+  /* COACH'S NOTE */
+  .coach-note {
+    background: rgba(255,184,28,0.07);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 12px 12px 0;
+    padding: 24px 28px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+  .coach-sign {
+    margin-top: 16px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 0.9rem;
+  }
+
+  /* WRISTBAND */
+  .wristband-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .wristband-strip {
+    background: white;
+    color: #111;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  .wb-row {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    flex-wrap: nowrap;
+    min-width: 680px;
+  }
+  .wb-cell {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid #ccc;
+    padding: 4px 6px;
+    min-width: 50px;
+  }
+  .wb-cell:last-child { border-right: none; }
+  .wb-label { font-size: 8px; color: #666; display: block; line-height: 1; margin-bottom: 1px; }
+  .wb-val { font-weight: 700; font-size: 12px; display: block; }
+  .wb-val.goal { color: #c8860a; }
+  .print-btn {
+    background: var(--gold);
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .print-btn:hover { opacity: 0.85; }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: black; }
+    .no-print { display: none !important; }
+    .wristband-strip { border: 2px solid black; }
+    .wb-cell { border-color: black; }
+    .wb-label { color: #444; }
+    .wb-val.goal { color: #8a6000; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-goals { flex-direction: column; align-items: center; }
+    .hero-stats { gap: 20px; }
+    table.splits th, table.splits td { padding: 8px 8px; font-size: 0.8rem; }
+    .flip-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero no-print">
+  <div class="hero-eyebrow">Pittsburgh Marathon · May 4, 2026</div>
+  <h1>Aidan <span>Giannelli</span></h1>
+  <div class="hero-sub">Race Execution Plan — Boston Qualifier · New York Qualifier</div>
+
+  <div class="hero-goals">
+    <div class="goal-card primary">
+      <div class="goal-label">A Goal</div>
+      <div class="goal-time">2:49:00</div>
+      <div class="goal-pace">6:27 / mi avg</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-label">B Goal</div>
+      <div class="goal-time">2:53:00</div>
+      <div class="goal-pace">6:36 / mi avg</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-label">Fitness Base</div>
+      <div class="goal-time">6:30–5:00</div>
+      <div class="goal-pace">Tempo / interval pace</div>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-val">61</div>
+      <div class="stat-lbl">VO2 Max</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">192</div>
+      <div class="stat-lbl">Max HR</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">175 lbs</div>
+      <div class="stat-lbl">Race Weight</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">BPN</div>
+      <div class="stat-lbl">Fuel Protocol</div>
+    </div>
+  </div>
+</div>
+
+<!-- ELEVATION -->
+<div class="section no-print">
+  <div class="section-title">Course Elevation</div>
+  <div class="elevation-wrap" style="position:relative;">
+    <div class="elevation-header">
+      <div>
+        <strong>Pittsburgh Marathon Course</strong><br>
+        <span class="elevation-meta">26.2 miles &nbsp;|&nbsp; Net Gain: ~650 ft &nbsp;|&nbsp; Hover to inspect</span>
+      </div>
+      <div class="elevation-meta">Key climbs: mi 3–4, 10–11, 18–19</div>
+    </div>
+    <canvas id="elevCanvas"></canvas>
+    <div class="elev-tooltip" id="elevTip"></div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SPLIT TABLE -->
+<div class="section no-print">
+  <div class="section-title">Mile-by-Mile Split Plan</div>
+  <div class="split-table-wrap">
+    <table class="splits">
+      <thead>
+        <tr>
+          <th>Mile</th>
+          <th>A Goal Split</th>
+          <th>Cumulative</th>
+          <th>B Goal Split</th>
+          <th>Elev (ft)</th>
+          <th>Zone</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody id="splitBody"></tbody>
+    </table>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- ZONES -->
+<div class="section no-print">
+  <div class="section-title">Heart Rate Zones</div>
+  <div class="zone-accordion" id="zoneAccordion"></div>
+</div>
+<hr class="divider">
+
+<!-- FUELING -->
+<div class="section no-print">
+  <div class="section-title">Fueling Timeline</div>
+  <div class="fuel-timeline" id="fuelTimeline"></div>
+</div>
+<hr class="divider">
+
+<!-- IF/THEN -->
+<div class="section no-print">
+  <div class="section-title">Race Day Decision Cards</div>
+  <p style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Click each card to reveal the response protocol.</p>
+  <div class="flip-grid" id="flipGrid"></div>
+</div>
+<hr class="divider">
+
+<!-- COACH'S NOTE -->
+<div class="section no-print">
+  <div class="section-title">Coach's Note</div>
+  <div class="coach-note">
+    Your fitness is not the question. VO2 of 61 and interval work down to sub-5:00 pace means the engine is there. The variable is execution — specifically, how disciplined you are in the first 13 miles when everything feels easy and every instinct says push.<br><br>
+    Pittsburgh punishes front-runners. The climbs at miles 3–4 and 10–11 will cost you HR spikes if you're not deliberate. Bank the discipline, not the seconds. Every mile you run at 6:20 when the plan says 6:27 is a debt you pay after mile 20.<br><br>
+    Run 6:30–6:35 through mile 8. Be patient. Lock 6:27 miles 9–20. Then at mile 20, if you've protected the effort, you have something left. That's the race. Everything before mile 20 is setup.
+    <div class="coach-sign">— Race Plan, Pittsburgh 2026</div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- WRISTBAND -->
+<div class="section">
+  <div class="section-title no-print">Printable Wristband</div>
+  <div class="wristband-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;" class="no-print">
+      <div>
+        <strong>Race Wristband</strong> — Cut out and tape to wrist<br>
+        <span style="font-size:0.8rem;color:var(--muted);">A: 2:49:00 (6:27/mi) &nbsp;|&nbsp; B: 2:53:00 (6:36/mi)</span>
+      </div>
+      <button class="print-btn" onclick="window.print()">Print Wristband</button>
+    </div>
+    <div class="wristband-strip" id="wristbandStrip">
+      <div style="font-weight:700;font-size:10px;margin-bottom:6px;text-align:center;letter-spacing:1px;">AIDAN GIANNELLI · PITTSBURGH MARATHON 2026 · A: 2:49:00 / B: 2:53:00</div>
+      <div class="wb-row" id="wbRow1"></div>
+      <div style="margin-top:4px;"></div>
+      <div class="wb-row" id="wbRow2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- DATA ----
+
+// Pittsburgh elevation profile by mile (approximate ft, net from start)
+const elevProfile = [
+  {mi:0,   elev:730},  // Start - Point State Park
+  {mi:1,   elev:740},
+  {mi:2,   elev:760},
+  {mi:3,   elev:820},  // First climb
+  {mi:4,   elev:880},  // Top of first major climb
+  {mi:5,   elev:820},
+  {mi:6,   elev:780},
+  {mi:7,   elev:750},
+  {mi:8,   elev:740},
+  {mi:9,   elev:760},
+  {mi:10,  elev:810},  // Second climb
+  {mi:11,  elev:870},  // Top of second climb
+  {mi:12,  elev:800},
+  {mi:13,  elev:760},  // Half
+  {mi:14,  elev:750},
+  {mi:15,  elev:760},
+  {mi:16,  elev:740},
+  {mi:17,  elev:750},
+  {mi:18,  elev:800},  // Third climb
+  {mi:19,  elev:840},
+  {mi:20,  elev:770},
+  {mi:21,  elev:750},
+  {mi:22,  elev:740},
+  {mi:23,  elev:730},
+  {mi:24,  elev:720},
+  {mi:25,  elev:710},
+  {mi:26,  elev:700},
+  {mi:26.2,elev:695},  // Finish
+];
+
+// Key climbs annotation
+const climbs = [
+  {mi: 4,   label: 'Climb 1 Peak'},
+  {mi: 11,  label: 'Climb 2 Peak'},
+  {mi: 19,  label: 'Climb 3 Peak'},
+];
+
+// Mile split data: [mile, elevDelta, zone, note]
+// A-goal: 6:27/mi = 387s avg
+// B-goal: 6:36/mi = 396s avg
+const splitData = [
+  // mi, aSecPerMi, bSecPerMi, elevChg, zone, note
+  [1,  397, 406,  +10, 1, 'Controlled start, hold back'],
+  [2,  394, 403,  +20, 1, 'Find rhythm, ignore crowd'],
+  [3,  397, 406,  +60, 2, 'Climb begins — shorten stride'],
+  [4,  403, 412,  +60, 2, 'Climb peak — accept HR spike'],
+  [5,  390, 399,  -60, 2, 'Downhill — don\'t brake, don\'t blast'],
+  [6,  387, 396,  -40, 2, 'Settling in, lock 6:27'],
+  [7,  387, 396,  -30, 2, 'Gel coming up — stay smooth'],
+  [8,  387, 396,  -10, 2, 'GEL #2 — wash down with water'],
+  [9,  387, 396,  +20, 2, 'Slight rise — effort not pace'],
+  [10, 390, 399,  +50, 2, 'Climb 2 begins'],
+  [11, 397, 406,  +60, 3, 'Climb 2 peak — trust it'],
+  [12, 384, 393,  -70, 2, 'Controlled descent'],
+  [13, 387, 396,  -40, 2, 'HALF ~1:24:30 — assess'],
+  [14, 387, 396,  -10, 2, 'Flat stretch — GEL #4'],
+  [15, 387, 396,    0, 2, 'Cruise control'],
+  [16, 387, 396,  -10, 2, 'GEL #4 — start counting miles not miles left'],
+  [17, 387, 396,  +10, 2, 'Slight roll'],
+  [18, 390, 399,  +50, 3, 'Climb 3 begins — GEL #5'],
+  [19, 397, 406,  +40, 3, 'Climb 3 peak — biggest test'],
+  [20, 390, 399,  -70, 3, 'MILE 20 — now we race'],
+  [21, 384, 393,  -20, 3, 'GEL #6 — last fuel'],
+  [22, 381, 390,  -10, 3, 'Start picking targets'],
+  [23, 381, 390,  -10, 3, 'GEL #7 if needed — 5K left'],
+  [24, 378, 387,  -10, 3, 'Empty the tank'],
+  [25, 375, 384,  -10, 3, 'All in'],
+  [26, 371, 380,  -10, 3, 'Sub-6:00 push if you have it'],
+  [27, 360, 370,   -5, 3, 'Finish strong — .2 mi'],
+];
+
+function secToMSS(s) {
+  s = Math.round(s);
+  const m = Math.floor(s/60);
+  const sec = s%60;
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+function secToHMS(s) {
+  s = Math.round(s);
+  const h = Math.floor(s/3600);
+  const m = Math.floor((s%3600)/60);
+  const sec = s%60;
+  return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// Zone definitions
+const zones = [
+  {
+    num: 1,
+    name: 'Zone 1 — Easy',
+    color: '#00b894',
+    paceRange: '7:30–8:00/mi',
+    hrRange: '<154 bpm (<80% Max)',
+    desc: 'Pure aerobic base. Conversational effort. Used for warmup, cooldown, and the first 2 miles of Pittsburgh.',
+    cues: [
+      'Can speak in full sentences without gasping',
+      'Feel like you\'re holding back — you are, and that\'s correct',
+      'Heart rate below 154 (80% of 192)',
+      'Miles 1–2: resist every urge to go faster than this',
+    ]
+  },
+  {
+    num: 2,
+    name: 'Zone 2 — Marathon Effort',
+    color: '#fdcb6e',
+    paceRange: '6:25–6:40/mi',
+    hrRange: '154–173 bpm (80–90%)',
+    desc: 'Your race zone. 6:27/mi sits right in this band. Sustainable for 26.2 miles if you don\'t push into Zone 3 early. This is where the marathon is run.',
+    cues: [
+      'Breathing is rhythmic and controlled — 2:2 or 3:3 count',
+      'Speaking in short phrases, not full sentences',
+      'Heart rate 154–173 (80–90% of 192)',
+      'Feels "comfortably uncomfortable" — not a burn, not a cruise',
+      'Held for miles 3–19 on this course',
+    ]
+  },
+  {
+    num: 3,
+    name: 'Zone 3 — Threshold',
+    color: '#e17055',
+    paceRange: '6:05–6:20/mi',
+    hrRange: '173–183 bpm (90–95%)',
+    desc: 'Reserve this for miles 20–26. Do not visit Zone 3 before mile 20. On climbs at 11 and 19, HR may spike briefly — allow it, don\'t force pace.',
+    cues: [
+      'Breathing is hard — words only, not phrases',
+      'Heart rate 173–183',
+      'This is the close. If you\'re here before mile 20, back off immediately',
+      'Miles 20–26: controlled aggression — each mile is shorter than the last',
+    ]
+  },
+  {
+    num: 4,
+    name: 'Zone 4 — VO2 Max',
+    color: '#e84393',
+    paceRange: 'Sub-6:00/mi',
+    hrRange: '183–192 bpm (95–100%)',
+    desc: 'Not a race zone for marathon pacing. Represents the top end you\'ve trained at in intervals (sub-5:00/mi). In a race, briefly touching this late is fine — it means you\'re finishing hard.',
+    cues: [
+      'Not sustainable beyond 1–2 minutes in race context',
+      'If HR is here at mile 10 you are in serious trouble — back off immediately',
+      'Final sprint only — last quarter mile',
+      'Your training at 5:00/mi intervals confirms this system is strong',
+    ]
+  },
+  {
+    num: 5,
+    name: 'Zone 5 — Redline',
+    color: '#d63031',
+    paceRange: 'All-out',
+    hrRange: 'Max HR 192',
+    desc: 'Race day context: this is the physiological ceiling. You know where this is — interval peaks. Do not approach before mile 26.',
+    cues: [
+      'No verbal capacity',
+      'Complete muscle recruitment',
+      'Finish line only',
+      'Trained at this level — you have the buffer',
+    ]
+  },
+  {
+    num: 6,
+    name: 'Zone 6 — Climb Protocol',
+    color: '#6c5ce7',
+    paceRange: 'Effort-matched',
+    hrRange: 'Allow +5–8 bpm on incline',
+    desc: 'Not a true HR zone — a protocol for Pittsburgh\'s three climbs. On grades, regulate by effort not pace. Heart rate will spike; let it. Do not fight the hill with pace, fight it with form.',
+    cues: [
+      'Shorten stride, increase cadence on uphill',
+      'Arms drive the legs — pump elbows on steep sections',
+      'Accept 10–15 sec/mi slower on climbs — that\'s the plan',
+      'Recover on downhills: don\'t brake, but don\'t sprint',
+      'Climbs: miles 3–4, 10–11, 18–19',
+    ]
+  },
+  {
+    num: 7,
+    name: 'Zone 7 — Mental Protocol',
+    color: '#00cec9',
+    paceRange: 'Any',
+    hrRange: 'Any',
+    desc: 'The psychological framework. Applies at every mile. Miles 18–22 are where marathons are lost mentally, not physically.',
+    cues: [
+      'Mile 1–13: race the plan, not the runners around you',
+      'Mile 13: check in — if ahead of 6:27 pace, do not accelerate',
+      'Mile 18–20: the bad patch is expected — stay inside the plan',
+      'Mile 20: shift identity — you\'re no longer running to survive, you\'re racing',
+      'Mile 23+: each mile is the last mile of your race prep. Leave nothing.',
+    ]
+  }
+];
+
+// Fueling events
+const fuelEvents = [
+  {type:'pre',   mi:'Pre-Race',      action:'Coffee + small carb snack',       note:'3 hrs before gun'},
+  {type:'pre',   mi:'30 min out',    action:'BPN gel #1 — pre-load',           note:'With 4–6 oz water'},
+  {type:'water', mi:'Mile 1–2',      action:'Water sip at first station',      note:'Small — just habit'},
+  {type:'gel',   mi:'Mile 4',        action:'BPN Gel #2',                      note:'Wash down fully with water'},
+  {type:'water', mi:'Miles 5–7',     action:'Water every station',             note:'4–6 oz each'},
+  {type:'gel',   mi:'Mile 8',        action:'BPN Gel #3',                      note:'Critical — before you need it'},
+  {type:'water', mi:'Miles 9–11',    action:'Water every station',             note:'Maintain on climbs'},
+  {type:'gel',   mi:'Mile 12',       action:'BPN Gel #4',                      note:'Halfway fuel, pre-load for second half'},
+  {type:'water', mi:'Miles 13–15',   action:'Water every station',             note:''},
+  {type:'gel',   mi:'Mile 16',       action:'BPN Gel #5',                      note:''},
+  {type:'water', mi:'Miles 17',      action:'Water',                           note:''},
+  {type:'gel',   mi:'Mile 20',       action:'BPN Gel #6',                      note:'Mile 20 — race begins now'},
+  {type:'gel',   mi:'Mile 23',       action:'BPN Gel #7 (if needed)',          note:'Last fuel — 5K to go'},
+  {type:'water', mi:'Miles 20–25',   action:'Water every station',             note:'Critical — do not skip'},
+];
+
+// IF/THEN scenarios
+const scenarios = [
+  {
+    cond: 'Ahead of 6:27 at mile 5',
+    action: 'Back off 5–8 sec/mi immediately',
+    hint: 'First 5 miles are setup. Burning matches early costs double after 20.'
+  },
+  {
+    cond: 'HR above 175 on a flat before mile 15',
+    action: 'Slow 10–15 sec/mi for 2 miles. Let HR recover.',
+    hint: 'HR ceiling is your warning system. Respect it early.'
+  },
+  {
+    cond: 'Feeling amazing at mile 13',
+    action: 'Stay locked at plan pace. Do not surge.',
+    hint: 'The best miles 1–13 create the worst miles 20–26.'
+  },
+  {
+    cond: 'Legs feel heavy at mile 18',
+    action: 'Expected. Stay in Zone 2. Focus on next mile only.',
+    hint: 'Mile 18 heaviness is glycogen response, not fitness failure.'
+  },
+  {
+    cond: 'Stomach issues during race',
+    action: 'Skip next gel, water only for 2 miles, reassess',
+    hint: 'Do not push fuel on a bad stomach — nausea compounds.'
+  },
+  {
+    cond: 'Passed by large group',
+    action: 'Let them go. Race your plan.',
+    hint: 'You will pass them back after mile 20.'
+  },
+  {
+    cond: '2:49 slipping at mile 22',
+    action: 'Lock in B goal (6:36/mi). Still a BQ.',
+    hint: '2:53 still qualifies. Execute a complete race over a heroic collapse.'
+  },
+  {
+    cond: 'Mile 20 — on pace and feeling good',
+    action: 'Begin controlled acceleration. Zone 3 permitted now.',
+    hint: 'This is the reward for patience. You banked it — spend it.'
+  },
+];
+
+// ---- ELEVATION CHART ----
+(function() {
+  const canvas = document.getElementById('elevCanvas');
+  const tip = document.getElementById('elevTip');
+  const dpr = window.devicePixelRatio || 1;
+  function drawChart() {
+    const w = canvas.parentElement.clientWidth - 48;
+    const h = 180;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const pad = {top: 16, right: 20, bottom: 28, left: 48};
+    const cw = w - pad.left - pad.right;
+    const ch = h - pad.top - pad.bottom;
+
+    const minE = Math.min(...elevProfile.map(p=>p.elev)) - 20;
+    const maxE = Math.max(...elevProfile.map(p=>p.elev)) + 20;
+    const maxMi = 26.2;
+
+    function xPos(mi) { return pad.left + (mi/maxMi)*cw; }
+    function yPos(e)  { return pad.top + ch - ((e-minE)/(maxE-minE))*ch; }
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    [0,5,10,15,20,26.2].forEach(mi => {
+      const x = xPos(mi);
+      ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top+ch); ctx.stroke();
+    });
+
+    // Fill gradient
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top+ch);
+    grad.addColorStop(0, 'rgba(255,184,28,0.35)');
+    grad.addColorStop(1, 'rgba(255,184,28,0.03)');
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), yPos(elevProfile[0].elev));
+    elevProfile.forEach(p => ctx.lineTo(xPos(p.mi), yPos(p.elev)));
+    ctx.lineTo(xPos(maxMi), pad.top+ch);
+    ctx.lineTo(xPos(0), pad.top+ch);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    ctx.strokeStyle = '#FFB81C';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    elevProfile.forEach((p, i) => {
+      if(i===0) ctx.moveTo(xPos(p.mi), yPos(p.elev));
+      else ctx.lineTo(xPos(p.mi), yPos(p.elev));
+    });
+    ctx.stroke();
+
+    // Climb markers
+    climbs.forEach(c => {
+      const x = xPos(c.mi);
+      const ep = elevProfile.find(p=>p.mi===c.mi);
+      if(!ep) return;
+      const y = yPos(ep.elev);
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#e94560';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+
+    // X axis labels
+    ctx.fillStyle = 'rgba(160,160,176,0.8)';
+    ctx.font = '10px Helvetica Neue, Arial';
+    ctx.textAlign = 'center';
+    [0,5,10,13.1,15,20,26.2].forEach(mi => {
+      ctx.fillText(mi===13.1?'HALF':mi===26.2?'FIN':mi, xPos(mi), pad.top+ch+16);
+    });
+
+    // Y axis
+    ctx.textAlign = 'right';
+    [700,750,800,850].forEach(e => {
+      if(e >= minE && e <= maxE) {
+        ctx.fillText(e+'\'', pad.left-6, yPos(e)+4);
+      }
+    });
+  }
+
+  drawChart();
+  window.addEventListener('resize', drawChart);
+
+  // Tooltip
+  canvas.addEventListener('mousemove', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left);
+    const w = canvas.parentElement.clientWidth - 48;
+    const pad = {left:48, right:20};
+    const cw = w - pad.left - pad.right;
+    const mi = ((mx - pad.left) / cw) * 26.2;
+    if(mi < 0 || mi > 26.2) { tip.style.display='none'; return; }
+    // Interpolate elev
+    let lo = elevProfile[0], hi = elevProfile[elevProfile.length-1];
+    for(let i=0; i<elevProfile.length-1; i++) {
+      if(elevProfile[i].mi <= mi && elevProfile[i+1].mi >= mi) {
+        lo = elevProfile[i]; hi = elevProfile[i+1]; break;
+      }
+    }
+    const t = lo.mi===hi.mi ? 0 : (mi-lo.mi)/(hi.mi-lo.mi);
+    const elev = Math.round(lo.elev + t*(hi.elev-lo.elev));
+    const curMi = Math.round(mi*10)/10;
+    tip.style.display='block';
+    tip.style.left = (e.clientX - rect.left + 12) + 'px';
+    tip.style.top = (e.clientY - rect.top - 36) + 'px';
+    tip.innerHTML = `<strong>Mile ${curMi}</strong> &nbsp; ${elev} ft`;
+  });
+  canvas.addEventListener('mouseleave', () => { tip.style.display='none'; });
+})();
+
+// ---- SPLIT TABLE ----
+(function() {
+  const tbody = document.getElementById('splitBody');
+  let aCum = 0, bCum = 0;
+  splitData.forEach(([mi, aSec, bSec, elev, zone, note]) => {
+    const isLast = mi === 27;
+    const distLabel = isLast ? '0.2' : String(mi);
+    // For last segment (.2 mi), adjust cumulative
+    const aSegSec = isLast ? Math.round(aSec * 0.2) : aSec;
+    const bSegSec = isLast ? Math.round(bSec * 0.2) : bSec;
+    aCum += aSegSec;
+    bCum += bSegSec;
+
+    const elevSign = elev > 0 ? `+${elev}` : String(elev);
+    const zoneColors = ['','#00b894','#fdcb6e','#e17055','#e84393','#d63031','#6c5ce7','#00cec9'];
+    const zoneClass = zone === 1 ? 'pill-easy' : zone === 2 ? 'pill-tempo' : 'pill-race';
+    const isHalf = mi === 13;
+    const isMile20 = mi === 20;
+
+    let rowStyle = '';
+    if(isHalf) rowStyle = 'background: rgba(255,184,28,0.06);';
+    if(isMile20) rowStyle = 'background: rgba(233,69,96,0.06);';
+
+    const miLabel = isLast ? '26.2' : (mi === 13 ? '13 (HALF)' : (mi === 20 ? '20 (RACE)' : mi));
+
+    tbody.innerHTML += `<tr style="${rowStyle}">
+      <td><strong>${miLabel}</strong></td>
+      <td><span class="pill pill-goal">${isLast ? secToMSS(aSegSec)+'/0.2' : secToMSS(aSec)}</span></td>
+      <td>${secToHMS(aCum)}</td>
+      <td>${isLast ? secToMSS(bSegSec)+'/0.2' : secToMSS(bSec)}</td>
+      <td style="color:${elev>0?'#e17055':elev<0?'#00b894':'var(--muted)'}">${elevSign} ft</td>
+      <td><span class="pill ${zoneClass}">Z${zone}</span></td>
+      <td style="color:var(--muted);font-size:0.8rem;">${note}</td>
+    </tr>`;
+  });
+})();
+
+// ---- ZONE ACCORDION ----
+(function() {
+  const acc = document.getElementById('zoneAccordion');
+  zones.forEach(z => {
+    const item = document.createElement('div');
+    item.className = 'zone-item';
+    item.innerHTML = `
+      <div class="zone-header">
+        <div class="zone-dot" style="background:${z.color}"></div>
+        <div class="zone-info">
+          <div class="zone-name">${z.name}</div>
+          <div class="zone-range">${z.paceRange}</div>
+        </div>
+        <div class="zone-hr">${z.hrRange}</div>
+        <div class="zone-caret">▼</div>
+      </div>
+      <div class="zone-body">
+        <p class="zone-desc">${z.desc}</p>
+        <ul class="zone-cues">
+          ${z.cues.map(c=>`<li>${c}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+    item.querySelector('.zone-header').addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+    acc.appendChild(item);
+  });
+})();
+
+// ---- FUELING TIMELINE ----
+(function() {
+  const tl = document.getElementById('fuelTimeline');
+  fuelEvents.forEach(f => {
+    const div = document.createElement('div');
+    div.className = `fuel-event ${f.type}`;
+    div.innerHTML = `
+      <div class="fuel-mi">${f.mi}</div>
+      <div class="fuel-action">${f.action}</div>
+      ${f.note ? `<div class="fuel-note">${f.note}</div>` : ''}
+    `;
+    tl.appendChild(div);
+  });
+})();
+
+// ---- FLIP CARDS ----
+(function() {
+  const grid = document.getElementById('flipGrid');
+  scenarios.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.innerHTML = `
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-if">IF</div>
+          <div class="flip-cond">${s.cond}</div>
+          <div style="margin-top:auto;font-size:0.75rem;color:var(--muted);">Click for response</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-then-lbl">THEN</div>
+          <div class="flip-action">${s.action}</div>
+          <div class="flip-hint">${s.hint}</div>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+    grid.appendChild(card);
+  });
+})();
+
+// ---- WRISTBAND ----
+(function() {
+  // 5-mile checkpoints
+  const checkpoints = [5,10,13.1,15,20,25,26.2];
+  const labels = ['Mi 5','Mi 10','HALF','Mi 15','Mi 20','Mi 25','FIN'];
+
+  let aCum = 0, bCum = 0;
+  // Build cumulative times from splitData
+  const cumA = {};
+  const cumB = {};
+  let runA = 0, runB = 0;
+  splitData.forEach(([mi, aSec, bSec]) => {
+    const isLast = mi === 27;
+    const aAdd = isLast ? Math.round(aSec * 0.2) : aSec;
+    const bAdd = isLast ? Math.round(bSec * 0.2) : bSec;
+    runA += aAdd;
+    runB += bAdd;
+    const miKey = isLast ? 26.2 : mi;
+    cumA[miKey] = runA;
+    cumB[miKey] = runB;
+  });
+
+  // Interpolate for checkpoints
+  function getCum(table, mi) {
+    const keys = Object.keys(table).map(Number).sort((a,b)=>a-b);
+    // Find bracketing keys
+    for(let i=0;i<keys.length-1;i++) {
+      if(keys[i]<=mi && keys[i+1]>=mi) {
+        const t = (mi-keys[i])/(keys[i+1]-keys[i]);
+        return Math.round(table[keys[i]] + t*(table[keys[i+1]]-table[keys[i]]));
+      }
+    }
+    return table[keys[keys.length-1]];
+  }
+
+  const row1 = document.getElementById('wbRow1');
+  const row2 = document.getElementById('wbRow2');
+  // Row 1: name + miles 5,10,half
+  const nameCell = document.createElement('div');
+  nameCell.className = 'wb-cell';
+  nameCell.style.minWidth = '120px';
+  nameCell.innerHTML = `<span class="wb-label">NAME</span><span class="wb-val">A. GIANNELLI</span>`;
+  row1.appendChild(nameCell);
+
+  [0,1,2].forEach(i => {
+    const mi = checkpoints[i];
+    const cell = document.createElement('div');
+    cell.className = 'wb-cell';
+    const aT = getCum(cumA, mi);
+    const bT = getCum(cumB, mi);
+    cell.innerHTML = `<span class="wb-label">${labels[i]}</span>
+      <span class="wb-val goal">${secToHMS(aT)}</span>
+      <span class="wb-label" style="margin-top:2px;">B: ${secToHMS(bT)}</span>`;
+    row1.appendChild(cell);
+  });
+
+  // Row 2: miles 15, 20, 25, FIN
+  const paceCell = document.createElement('div');
+  paceCell.className = 'wb-cell';
+  paceCell.style.minWidth = '90px';
+  paceCell.innerHTML = `<span class="wb-label">A PACE</span><span class="wb-val goal">6:27/mi</span>
+    <span class="wb-label" style="margin-top:2px;">B: 6:36/mi</span>`;
+  row2.appendChild(paceCell);
+
+  [3,4,5,6].forEach(i => {
+    const mi = checkpoints[i];
+    const cell = document.createElement('div');
+    cell.className = 'wb-cell';
+    const aT = getCum(cumA, mi);
+    const bT = getCum(cumB, mi);
+    cell.innerHTML = `<span class="wb-label">${labels[i]}</span>
+      <span class="wb-val goal">${secToHMS(aT)}</span>
+      <span class="wb-label" style="margin-top:2px;">B: ${secToHMS(bT)}</span>`;
+    row2.appendChild(cell);
+  });
+})();
+</script>
+</body>
+</html>
