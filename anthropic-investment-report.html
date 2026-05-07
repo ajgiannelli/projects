@@ -3,454 +3,873 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anthropic Investment Analysis — Private Client Research</title>
+<title>Anthropic — Private Client Investment Analysis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
 :root {
-  --bg: #0d0f14;
-  --bg2: #13161e;
-  --bg3: #1a1e29;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --gold: #C9952A;
-  --gold-light: #E8B84B;
-  --gold-dim: rgba(201,149,42,0.15);
-  --text: #E8E6E1;
-  --muted: #8A8A96;
-  --muted2: #6A6A76;
-  --red: #C0392B;
-  --red-dim: rgba(192,57,43,0.15);
-  --amber: #D4860A;
-  --amber-dim: rgba(212,134,10,0.15);
-  --green: #27AE60;
-  --green-dim: rgba(39,174,96,0.15);
-  --navy-accent: #1C2942;
-  --serif: 'Playfair Display', Georgia, serif;
-  --sans: 'DM Sans', system-ui, sans-serif;
-  --mono: 'DM Mono', 'Courier New', monospace;
-  --sidebar-w: 220px;
+  /* Anthropic exact palette */
+  --ivory:        #faf9f5;
+  --ivory-2:      #f0eee6;
+  --ivory-3:      #e8e6dc;
+  --oat:          #e3dacc;
+  --dark:         #141413;
+  --slate-mid:    #3d3d3a;
+  --slate-light:  #5e5d59;
+  --cloud:        #87867f;
+  --cloud-light:  #b0aea5;
+  --clay:         #d97757;
+  --ember:        #c6613f;
+  --sky:          #6a9bcc;
+  --olive:        #788c5d;
+
+  /* Semantic */
+  --bg:           var(--ivory);
+  --bg2:          var(--ivory-2);
+  --bg3:          var(--ivory-3);
+  --text:         var(--dark);
+  --text-2:       var(--slate-mid);
+  --text-3:       var(--slate-light);
+  --muted:        var(--cloud);
+  --border:       var(--ivory-3);
+  --border-2:     var(--oat);
+  --accent:       var(--clay);
+
+  /* Risk colors — muted to stay on-brand */
+  --risk-high-bg:    #f9ecea;
+  --risk-high-fg:    #a33;
+  --risk-high-bdr:   #e8c4c0;
+  --risk-med-bg:     #faf4ec;
+  --risk-med-fg:     #8a5c20;
+  --risk-med-bdr:    #e8d8c0;
+  --risk-low-bg:     #eef4ed;
+  --risk-low-fg:     #3d6b38;
+  --risk-low-bdr:    #ccdeca;
+
+  --serif: 'Lora', 'Charter', Georgia, serif;
+  --sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --mono:  'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+  --sidebar-w: 228px;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--ivory);
+  color: var(--dark);
   font-family: var(--sans);
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===== LAYOUT ===== */
+/* ========================
+   LAYOUT
+======================== */
 .layout { display: flex; min-height: 100vh; }
 
-/* ===== SIDEBAR NAV ===== */
+/* ========================
+   SIDEBAR
+======================== */
 .sidebar {
   width: var(--sidebar-w);
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   height: 100vh;
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
+  background: var(--dark);
   display: flex;
   flex-direction: column;
-  padding: 32px 0;
+  padding: 0;
   z-index: 100;
   overflow-y: auto;
 }
-.sidebar-logo {
-  padding: 0 24px 28px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 24px;
+
+.sidebar-top {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.sidebar-logo .firm { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
-.sidebar-logo .report-type { font-family: var(--serif); font-size: 13px; color: var(--muted); margin-top: 4px; }
-.nav-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted2); text-transform: uppercase; padding: 0 24px 10px; }
-.nav-item {
+
+.sidebar-wordmark {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 24px;
-  font-size: 12px;
-  color: var(--muted);
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.15s;
-  border-left: 2px solid transparent;
-  font-family: var(--sans);
-  font-weight: 500;
+  margin-bottom: 16px;
 }
-.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.nav-item.active { color: var(--gold-light); border-left-color: var(--gold); background: var(--gold-dim); }
-.nav-num { font-family: var(--mono); font-size: 10px; color: var(--muted2); width: 16px; flex-shrink: 0; }
-.sidebar-footer {
-  margin-top: auto;
-  padding: 20px 24px 0;
-  border-top: 1px solid var(--border);
+
+/* Anthropic logo — simple SVG inline */
+.anth-logo {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.sidebar-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: #faf9f5;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-doc {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(250,249,245,0.45);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 0;
+}
+
+.nav-section-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,249,245,0.3);
+  padding: 0 24px 8px;
+  margin-top: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 24px;
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(250,249,245,0.5);
+  transition: color 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.nav-item:hover { color: rgba(250,249,245,0.85); }
+.nav-item.active { color: #faf9f5; font-weight: 500; }
+
+.nav-num {
   font-family: var(--mono);
   font-size: 10px;
-  color: var(--muted2);
-  line-height: 1.6;
+  color: rgba(250,249,245,0.25);
+  width: 18px;
+  flex-shrink: 0;
 }
 
-/* ===== MAIN CONTENT ===== */
-.main { margin-left: var(--sidebar-w); flex: 1; }
+.nav-item.active .nav-num { color: var(--clay); }
 
-/* ===== HERO ===== */
+.sidebar-footer {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(250,249,245,0.25);
+  line-height: 1.8;
+}
+
+/* ========================
+   MAIN
+======================== */
+.main { margin-left: var(--sidebar-w); flex: 1; min-width: 0; }
+
+/* ========================
+   HERO
+======================== */
 .hero {
-  background: linear-gradient(160deg, #0d1520 0%, var(--bg) 60%);
-  border-bottom: 1px solid var(--border2);
-  padding: 80px 64px 64px;
+  background: var(--dark);
+  padding: 80px 72px 72px;
   position: relative;
   overflow: hidden;
 }
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -100px; right: -100px;
-  width: 500px; height: 500px;
-  background: radial-gradient(ellipse, rgba(201,149,42,0.06) 0%, transparent 65%);
-  pointer-events: none;
-}
-.hero-tag {
-  font-family: var(--mono);
+
+.hero-eyebrow {
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  color: var(--clay);
+  margin-bottom: 24px;
 }
-.hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+
 .hero h1 {
   font-family: var(--serif);
-  font-size: clamp(2.4rem, 4vw, 3.8rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  color: var(--text);
-  margin-bottom: 12px;
+  font-size: clamp(2.6rem, 4vw, 4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #faf9f5;
+  margin-bottom: 20px;
+  max-width: 680px;
 }
-.hero h1 span { color: var(--gold-light); }
-.hero-sub {
-  font-size: 15px;
-  color: var(--muted);
-  margin-bottom: 40px;
-  max-width: 560px;
-}
-.hero-meta {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-.meta-item { }
-.meta-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--muted2); text-transform: uppercase; }
-.meta-val { font-family: var(--mono); font-size: 14px; color: var(--text); font-weight: 500; margin-top: 2px; }
-.meta-val.gold { color: var(--gold-light); }
 
-/* ===== VERDICT BANNER ===== */
-.verdict {
-  background: var(--gold-dim);
-  border: 1px solid rgba(201,149,42,0.3);
-  border-radius: 6px;
-  padding: 16px 24px;
-  margin: 40px 64px 0;
+.hero-sub {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(250,249,245,0.55);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 56px;
+}
+
+.hero-kpis {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(250,249,245,0.1);
+  border-left: 1px solid rgba(250,249,245,0.1);
+}
+
+.kpi {
+  padding: 24px 20px;
+  border-right: 1px solid rgba(250,249,245,0.1);
+  border-bottom: 1px solid rgba(250,249,245,0.1);
+}
+
+.kpi-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(250,249,245,0.35);
+  margin-bottom: 8px;
+}
+
+.kpi-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  color: #faf9f5;
+  line-height: 1;
+}
+
+.kpi-val.clay { color: var(--clay); }
+
+/* ========================
+   VERDICT STRIP
+======================== */
+.verdict-strip {
+  background: var(--ivory-2);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 72px;
   display: flex;
   align-items: flex-start;
   gap: 16px;
 }
-.verdict-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.verdict-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
-.verdict-text { font-size: 14px; color: var(--text); line-height: 1.6; }
 
-/* ===== SECTIONS ===== */
+.verdict-mark {
+  width: 4px;
+  height: 100%;
+  min-height: 40px;
+  background: var(--clay);
+  border-radius: 0;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.verdict-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 6px;
+}
+
+.verdict-text {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--slate-mid);
+  line-height: 1.65;
+}
+
+/* ========================
+   SECTIONS
+======================== */
 .section {
-  padding: 72px 64px;
+  padding: 72px;
   border-bottom: 1px solid var(--border);
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
 .section.visible { opacity: 1; transform: translateY(0); }
-.section-header {
+
+/* alternating bg */
+.section:nth-child(even) { background: var(--ivory-2); }
+
+.section-eyebrow {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 40px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
+
 .section-num {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--gold);
-  letter-spacing: 1px;
-  margin-top: 8px;
-  flex-shrink: 0;
+  color: var(--clay);
+  letter-spacing: 0.05em;
 }
+
+.section-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .section-title {
   font-family: var(--serif);
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-  font-weight: 700;
-  color: var(--text);
+  font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+  font-weight: 500;
+  color: var(--dark);
   line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
 }
-.section-desc { font-size: 14px; color: var(--muted); margin-top: 6px; }
 
-/* ===== SPARRING CHECK ===== */
-.sparring {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-left: 3px solid var(--gold);
-  border-radius: 0 6px 6px 0;
-  padding: 16px 20px;
-  margin-top: 32px;
+.section-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 40px;
 }
-.sparring-label {
+
+/* ========================
+   BODY ELEMENTS
+======================== */
+h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 36px 0 12px;
+  letter-spacing: -0.01em;
+}
+
+p {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--slate-mid);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.lead {
+  font-size: 16px;
+  color: var(--slate-mid);
+  line-height: 1.8;
+}
+
+ul { list-style: none; margin: 12px 0 20px; padding: 0; }
+
+ul li {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--slate-mid);
+  padding: 5px 0 5px 20px;
+  position: relative;
+  line-height: 1.65;
+  border-bottom: 1px solid var(--border);
+}
+
+ul li:last-child { border-bottom: none; }
+
+ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 6px;
+  height: 1px;
+  background: var(--clay);
+}
+
+strong { color: var(--dark); font-weight: 600; }
+em { font-style: italic; }
+
+hr.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+/* ========================
+   TAGS / LABELS
+======================== */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-radius: 0;
   text-transform: uppercase;
-  margin-bottom: 6px;
 }
-.sparring-text { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.6; }
 
-/* ===== ALERT ===== */
-.alert {
-  background: var(--red-dim);
-  border: 1px solid rgba(192,57,43,0.35);
-  border-radius: 6px;
-  padding: 20px 24px;
-  margin-bottom: 32px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-.alert-icon { font-size: 18px; flex-shrink: 0; }
-.alert-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--red); text-transform: uppercase; margin-bottom: 6px; }
-.alert-text { font-size: 14px; line-height: 1.65; }
+.tag-v  { background: #eef4ed; color: #3d6b38; }
+.tag-u  { background: #faf4ec; color: #8a5c20; }
+.tag-a  { background: #eef0f8; color: #405085; }
+.tag-j  { background: #f5eef5; color: #705070; }
 
-/* ===== DATA CARDS ===== */
-.stat-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin: 28px 0; }
-.stat-card {
-  background: var(--bg2);
+/* ========================
+   STAT ROW
+======================== */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
+  margin: 28px 0;
 }
-.stat-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--muted2); text-transform: uppercase; margin-bottom: 6px; }
-.stat-card-val { font-family: var(--mono); font-size: 1.5rem; font-weight: 500; color: var(--gold-light); }
-.stat-card-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-/* ===== TABLES ===== */
+.stat-card {
+  padding: 24px 20px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-card:last-child { border-right: none; }
+
+.stat-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.stat-val {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.stat-val.clay { color: var(--clay); }
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* ========================
+   TABLES
+======================== */
 .table-wrap { overflow-x: auto; margin: 24px 0; }
+
 table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 13px;
 }
+
 thead th {
-  background: var(--bg3);
-  color: var(--gold);
+  background: var(--ivory-3);
+  color: var(--slate-light);
   font-size: 10px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 16px;
   text-align: left;
-  border-bottom: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border-2);
   white-space: nowrap;
 }
+
 tbody td {
-  padding: 11px 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border);
-  color: var(--text);
+  color: var(--slate-mid);
   vertical-align: top;
+  line-height: 1.5;
 }
+
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: rgba(255,255,255,0.02); }
-.tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
+tbody tr:hover td { background: var(--ivory-2); }
+
+.mono { font-family: var(--mono); font-size: 12px; }
+
+/* ========================
+   ALERT BOX
+======================== */
+.alert {
+  background: var(--risk-high-bg);
+  border: 1px solid var(--risk-high-bdr);
+  border-left: 4px solid var(--risk-high-fg);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+
+.alert-label {
+  font-family: var(--sans);
   font-size: 10px;
-  font-family: var(--mono);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.tag-verified { background: var(--green-dim); color: var(--green); }
-.tag-unverified { background: var(--amber-dim); color: var(--amber); }
-.tag-assumption { background: rgba(100,100,200,0.15); color: #8888ee; }
-.tag-judgment { background: rgba(200,100,200,0.12); color: #cc88cc; }
-
-/* ===== SCENARIO CARDS ===== */
-.scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 28px 0; }
-.scenario-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.scenario-header {
-  padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--border);
-}
-.scenario-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-.scenario-card.bear .scenario-label { color: var(--red); }
-.scenario-card.base .scenario-label { color: var(--amber); }
-.scenario-card.bull .scenario-label { color: var(--green); }
-.scenario-card.bear { border-top: 3px solid var(--red); }
-.scenario-card.base { border-top: 3px solid var(--amber); }
-.scenario-card.bull { border-top: 3px solid var(--green); }
-.scenario-val {
-  font-family: var(--mono);
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.scenario-card.bear .scenario-val { color: var(--red); }
-.scenario-card.base .scenario-val { color: var(--amber); }
-.scenario-card.bull .scenario-val { color: var(--green); }
-.scenario-body { padding: 18px 20px; }
-.scenario-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
-.scenario-row:last-child { border-bottom: none; }
-.scenario-row-label { color: var(--muted); }
-.scenario-row-val { font-family: var(--mono); color: var(--text); }
-.scenario-assumption { font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.5; }
-
-/* ===== RISK CARDS ===== */
-.risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
-.risk-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-}
-.risk-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.risk-name { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--text); }
-.severity-badge {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 3px;
-  font-weight: 500;
-  flex-shrink: 0;
-  margin-left: 8px;
-}
-.sev-high { background: var(--red-dim); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
-.sev-med { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(212,134,10,0.3); }
-.sev-low { background: var(--green-dim); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
-.risk-likelihood { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; }
-.risk-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
-.risk-mitigation { font-size: 12px; color: var(--muted2); border-top: 1px solid var(--border); padding-top: 10px; }
-.risk-mitigation strong { color: var(--gold); font-weight: 500; }
-
-/* ===== PATHWAY CARDS ===== */
-.pathway-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
-.pathway-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 22px;
-}
-.pathway-card.recommended { border-color: rgba(201,149,42,0.4); background: var(--gold-dim); }
-.pathway-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-.pathway-tag {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 3px;
-  margin-bottom: 10px;
-  display: inline-block;
-}
-.pathway-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
-
-/* ===== BODY ELEMENTS ===== */
-h3 {
-  font-family: var(--serif);
-  font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text);
-  margin: 28px 0 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--risk-high-fg);
+  margin-bottom: 8px;
 }
-p { margin-bottom: 14px; font-size: 15px; line-height: 1.75; color: var(--text); }
-.lead { font-size: 16px; line-height: 1.8; color: var(--text); }
-ul { margin: 12px 0 16px 0; padding-left: 0; list-style: none; }
-ul li {
+
+.alert-text {
+  font-family: var(--sans);
   font-size: 14px;
-  color: var(--muted);
-  padding: 4px 0 4px 20px;
-  position: relative;
-  line-height: 1.6;
-}
-ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
-strong { color: var(--text); font-weight: 600; }
-.mono { font-family: var(--mono); }
-.source { font-family: var(--mono); font-size: 10px; color: var(--muted2); }
-.divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-.highlight-box {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  padding: 24px;
-  margin: 24px 0;
-}
-.highlight-box.gold { border-color: rgba(201,149,42,0.3); background: var(--gold-dim); }
-
-/* ===== BOTTOM LINE ===== */
-.bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
-.bottom-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 24px;
-}
-.bottom-card.proceed { border-top: 3px solid var(--amber); }
-.bottom-card.alt { border-top: 3px solid var(--green); }
-.bottom-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); margin-bottom: 12px; }
-.bottom-label.amber { color: var(--amber); }
-.bottom-label.green { color: var(--green); }
-
-/* ===== DISCLAIMER ===== */
-.disclaimer {
-  background: var(--bg2);
-  padding: 40px 64px;
-  border-top: 1px solid var(--border);
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted2);
+  color: var(--slate-mid);
   line-height: 1.7;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
+/* ========================
+   HIGHLIGHT BOX
+======================== */
+.box {
+  background: var(--ivory-2);
+  border: 1px solid var(--border-2);
+  border-left: 4px solid var(--clay);
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.box p { margin-bottom: 0; }
+
+.box.neutral {
+  border-left-color: var(--border-2);
+  background: var(--ivory-3);
+}
+
+/* ========================
+   SPARRING
+======================== */
+.sparring {
+  background: var(--ivory-3);
+  border: 1px solid var(--border-2);
+  border-left: 4px solid var(--clay);
+  padding: 18px 22px;
+  margin-top: 36px;
+}
+
+.sparring-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 6px;
+}
+
+.sparring-text {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--slate-light);
+  font-style: italic;
+  line-height: 1.65;
+}
+
+/* ========================
+   SCENARIO CARDS
+======================== */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+.scenario-card { border-right: 1px solid var(--border); }
+.scenario-card:last-child { border-right: none; }
+
+.scenario-head {
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-badge {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.bear .scenario-badge { color: var(--risk-high-fg); }
+.base .scenario-badge { color: var(--risk-med-fg); }
+.bull .scenario-badge { color: var(--risk-low-fg); }
+
+.scenario-top-line {
+  font-family: var(--mono);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--dark);
+  line-height: 1.1;
+}
+
+.bear .scenario-top-line { color: var(--risk-high-fg); }
+.base .scenario-top-line { color: var(--risk-med-fg); }
+.bull .scenario-top-line { color: var(--risk-low-fg); }
+
+.scenario-body { padding: 18px 22px; }
+
+.s-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.s-row:last-of-type { border-bottom: none; }
+.s-label { color: var(--muted); font-family: var(--sans); }
+.s-val { font-family: var(--mono); color: var(--slate-mid); }
+
+.scenario-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--sans);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* ========================
+   RISK REGISTER
+======================== */
+.risk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+.risk-card {
+  background: var(--ivory);
+  padding: 22px;
+}
+
+.section:nth-child(even) .risk-card { background: var(--ivory-2); }
+
+.risk-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.risk-name {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--dark);
+  line-height: 1.3;
+  max-width: 180px;
+}
+
+.sev {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 0;
+}
+
+.sev-h { background: var(--risk-high-bg); color: var(--risk-high-fg); border: 1px solid var(--risk-high-bdr); }
+.sev-m { background: var(--risk-med-bg);  color: var(--risk-med-fg);  border: 1px solid var(--risk-med-bdr); }
+.sev-l { background: var(--risk-low-bg);  color: var(--risk-low-fg);  border: 1px solid var(--risk-low-bdr); }
+
+.risk-likelihood {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.risk-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--slate-light);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.risk-mit {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  line-height: 1.55;
+}
+
+.risk-mit strong { color: var(--clay); font-weight: 500; }
+
+/* ========================
+   PATHWAY CARDS
+======================== */
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+.pathway-card {
+  background: var(--ivory);
+  padding: 24px;
+}
+
+.section:nth-child(even) .pathway-card { background: var(--ivory-2); }
+.pathway-card.rec { background: #fef9f5; border-left: 4px solid var(--clay); }
+
+.p-name {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.p-badge {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  margin-bottom: 12px;
+  display: inline-block;
+  border-radius: 0;
+}
+
+.p-badge.cond { background: var(--risk-med-bg); color: var(--risk-med-fg); }
+.p-badge.hard { background: var(--risk-high-bg); color: var(--risk-high-fg); }
+.p-badge.rec  { background: var(--risk-low-bg);  color: var(--risk-low-fg); }
+.p-badge.open { background: var(--ivory-3); color: var(--slate-light); }
+
+.p-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--slate-light);
+  line-height: 1.6;
+}
+
+/* ========================
+   BOTTOM LINE CARDS
+======================== */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+.b-card {
+  background: var(--ivory);
+  padding: 28px;
+}
+
+.section:nth-child(even) .b-card { background: var(--ivory-2); }
+
+.b-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.b-label.amber { color: var(--risk-med-fg); }
+.b-label.green { color: var(--risk-low-fg); }
+
+/* ========================
+   TWO-COL
+======================== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+.two-col-item {
+  background: var(--ivory);
+  padding: 24px;
+}
+
+.section:nth-child(even) .two-col-item { background: var(--ivory-2); }
+
+.two-col-item h4 {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.two-col-item.right-col { border-left: 1px solid var(--border); }
+
+/* ========================
+   DISCLAIMER
+======================== */
+.disclaimer {
+  background: var(--dark);
+  padding: 40px 72px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(250,249,245,0.3);
+  line-height: 1.8;
+}
+
+/* ========================
+   RESPONSIVE
+======================== */
+@media (max-width: 960px) {
   .sidebar { display: none; }
   .main { margin-left: 0; }
-  .hero, .section { padding: 48px 28px; }
-  .verdict { margin: 28px 28px 0; }
+  .hero, .section { padding: 48px 32px; }
+  .verdict-strip { padding: 20px 32px; }
+  .hero-kpis { grid-template-columns: repeat(2, 1fr); }
   .scenario-grid { grid-template-columns: 1fr; }
+  .scenario-card { border-right: none; border-bottom: 1px solid var(--border); }
   .two-col, .bottom-grid { grid-template-columns: 1fr; }
-  .disclaimer { padding: 32px 28px; }
+  .two-col-item.right-col { border-left: none; border-top: 1px solid var(--border); }
+  .disclaimer { padding: 32px; }
 }
 </style>
 </head>
@@ -458,210 +877,203 @@ strong { color: var(--text); font-weight: 600; }
 
 <div class="layout">
 
-<!-- SIDEBAR -->
+<!-- ========== SIDEBAR ========== -->
 <nav class="sidebar">
-  <div class="sidebar-logo">
-    <div class="firm">Private Client Research</div>
-    <div class="report-type">Investment Analysis</div>
+  <div class="sidebar-top">
+    <div class="sidebar-wordmark">
+      <!-- Anthropic minimal logo mark -->
+      <svg class="anth-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.8 8L32 32H27.2L24.8 25.6H15.2L12.8 32H8L17.2 8H22.8ZM20 13.6L16.8 22.4H23.2L20 13.6Z" fill="#d97757"/>
+      </svg>
+      <div class="sidebar-name">Anthropic</div>
+    </div>
+    <div class="sidebar-doc">Private Client<br>Investment Analysis · May 2026</div>
   </div>
-  <div class="nav-label">Report Sections</div>
-  <a class="nav-item active" href="#exec"><span class="nav-num">01</span>Executive Summary</a>
-  <a class="nav-item" href="#overview"><span class="nav-num">02</span>Company Overview</a>
-  <a class="nav-item" href="#liquidity"><span class="nav-num">03</span>Liquidity Reality</a>
-  <a class="nav-item" href="#portfolio"><span class="nav-num">04</span>Portfolio Context</a>
-  <a class="nav-item" href="#valuation"><span class="nav-num">05</span>Valuation &amp; Scenarios</a>
-  <a class="nav-item" href="#access"><span class="nav-num">06</span>Access Pathways</a>
-  <a class="nav-item" href="#risks"><span class="nav-num">07</span>Risk Register</a>
-  <a class="nav-item" href="#bottom"><span class="nav-num">08</span>Bottom Line</a>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Report</div>
+    <a class="nav-item active" href="#exec"><span class="nav-num">01</span>Executive Summary</a>
+    <a class="nav-item" href="#overview"><span class="nav-num">02</span>Company Overview</a>
+    <a class="nav-item" href="#liquidity"><span class="nav-num">03</span>Liquidity Reality</a>
+    <a class="nav-item" href="#portfolio"><span class="nav-num">04</span>Portfolio Context</a>
+    <a class="nav-item" href="#valuation"><span class="nav-num">05</span>Valuation &amp; Scenarios</a>
+    <a class="nav-item" href="#access"><span class="nav-num">06</span>Access Pathways</a>
+    <a class="nav-item" href="#risks"><span class="nav-num">07</span>Risk Register</a>
+    <a class="nav-item" href="#bottom"><span class="nav-num">08</span>Bottom Line</a>
+  </nav>
+
   <div class="sidebar-footer">
-    Prepared: May 2026<br>
+    Prepared May 2026<br>
     Investor: Private Client<br>
-    Classification: Confidential
+    Confidential
   </div>
 </nav>
 
-<!-- MAIN -->
+<!-- ========== MAIN ========== -->
 <main class="main">
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-tag">Private Client Investment Analysis</div>
-  <h1>Anthropic: Should You<br><span>Invest $50,000?</span></h1>
-  <div class="hero-sub">A complete investment analysis for a 69-year-old retiree considering a pre-IPO or IPO position in Anthropic.</div>
-  <div class="hero-meta">
-    <div class="meta-item">
-      <div class="meta-label">Proposed Position</div>
-      <div class="meta-val gold">$50,000</div>
+  <div class="hero-eyebrow">Private Client Research · Equity Analysis</div>
+  <h1>Should You Invest<br>$50,000 in Anthropic?</h1>
+  <div class="hero-sub">A complete investment analysis for a retired investor considering a pre-IPO or IPO position. The question is not whether the company is exceptional. It is whether the price, the timing, and the structure are right for you.</div>
+  <div class="hero-kpis">
+    <div class="kpi">
+      <div class="kpi-label">Proposed Position</div>
+      <div class="kpi-val clay">$50,000</div>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Portfolio Size</div>
-      <div class="meta-val">~$2,000,000</div>
+    <div class="kpi">
+      <div class="kpi-label">Portfolio Size</div>
+      <div class="kpi-val">$2,000,000</div>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Allocation %</div>
-      <div class="meta-val">2.5%</div>
+    <div class="kpi">
+      <div class="kpi-label">Allocation</div>
+      <div class="kpi-val">2.5%</div>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Current Valuation</div>
-      <div class="meta-val gold">$380B+</div>
+    <div class="kpi">
+      <div class="kpi-label">Current Valuation</div>
+      <div class="kpi-val clay">$380B+</div>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Report Date</div>
-      <div class="meta-val">May 2026</div>
+    <div class="kpi">
+      <div class="kpi-label">Investor Age</div>
+      <div class="kpi-val">69</div>
     </div>
   </div>
 </div>
 
-<div class="verdict">
-  <div class="verdict-icon">⚖</div>
+<!-- VERDICT STRIP -->
+<div class="verdict-strip">
+  <div class="verdict-mark"></div>
   <div>
     <div class="verdict-label">Directional View</div>
-    <div class="verdict-text">The underlying business is exceptional and the AI thesis is real — but at a $380 billion private valuation (potentially $900 billion within weeks), a 69-year-old retiree on fixed income is being asked to pay a price that prices in near-perfection, accept 1-3 years of illiquidity, and stack concentrated AI exposure on top of an already AI-heavy portfolio. The question is not whether Anthropic is a great company. It is whether <em>this investor, at this price, at this stage of life</em>, should be the one holding it.</div>
+    <div class="verdict-text">The underlying business is exceptional and the AI thesis is real. But at a $380 billion private valuation — potentially $900 billion within weeks — a 69-year-old retiree on fixed income is being asked to pay a price that requires near-perfection, accept 1–3 years of illiquidity, and stack AI concentration on a portfolio that already holds meaningful Anthropic exposure through Amazon. The question is not whether Anthropic is a great company. It is whether <em>this investor, at this price, at this stage of life</em>, should be the one holding it.</div>
   </div>
 </div>
 
-<!-- ===== SECTION 1: EXECUTIVE SUMMARY ===== -->
+<!-- ===== 01 EXECUTIVE SUMMARY ===== -->
 <section class="section" id="exec">
-  <div class="section-header">
-    <div class="section-num">01</div>
-    <div>
-      <div class="section-title">Executive Summary</div>
-      <div class="section-desc">The opportunity, the investor profile tension, and the core question</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">01</span>
+    <span class="section-tag">Executive Summary</span>
   </div>
+  <div class="section-title">The Opportunity and the Tension</div>
+  <div class="section-desc">What Anthropic is, who this investor is, and the core question this report answers</div>
 
-  <p class="lead">Anthropic is the fastest-growing enterprise software company in history — it went from $1 billion in annualized revenue in December 2024 to over $30 billion by April 2026, a 30x increase in 16 months. Its Claude model line powers AI deployments across Deloitte (470,000 employees), Snowflake, Accenture, and hundreds of enterprise customers. Amazon has committed up to $33 billion in investment; Google up to $40 billion. The business is real, the growth is real, and the AI infrastructure buildout that Anthropic sits at the center of is a generational transition.</p>
+  <p class="lead">Anthropic is the fastest-growing enterprise software company in history. It went from $1 billion in annualized revenue in December 2024 to over $30 billion by April 2026 — a 30x increase in 16 months. Its Claude model line powers AI deployments at Deloitte (470,000 employees), Snowflake, and Accenture. Amazon has committed up to $33 billion; Google up to $40 billion. The business is real, the growth is real, and the AI infrastructure transition Anthropic sits at the center of is generational.</p>
 
-  <p>The tension is this: the investor considering this position is 69 years old, retired, living on fixed pension income, with a $2 million portfolio and a moderate-to-low risk tolerance where capital preservation is the stated primary objective. A $50,000 bet on a private company trading at $380 billion — a valuation that may reach $900 billion before IPO — means buying into one of the most aggressively priced assets in private market history, accepting up to 2-3 years before freely tradeable shares exist, and layering additional AI concentration on a portfolio that already holds NVDA, AMZN (a major Anthropic investor), AAPL, and multiple growth-heavy funds.</p>
+  <p>The tension is this: the investor considering this position is 69, retired, living on fixed pension income, with a $2 million portfolio and a moderate-to-low risk tolerance where capital preservation is the stated primary objective. A $50,000 position in a company trading at $380 billion — potentially $900 billion before IPO — means buying one of the most aggressively valued assets in private market history, accepting up to 2–3 years before freely tradeable shares exist, and layering AI concentration on a portfolio that already holds NVDA, AMZN (a major Anthropic investor), AAPL, and multiple growth-heavy funds.</p>
 
-  <p>The core question this report answers: <strong>Is the Anthropic opportunity appropriate for this investor at this valuation, in this stage of life, given realistic access and liquidity constraints?</strong> The answer is directional, not binary — and it hinges on which pathway, which account type, and what sizing discipline is applied.</p>
+  <p>The core question: <strong>Is this opportunity appropriate for this investor, at this valuation, at this stage of life, given realistic access and liquidity constraints?</strong> The answer is not binary. It depends on pathway, account type, and sizing discipline — all addressed in full below.</p>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">Strongest counterargument: this summary may be too conservative — a $50,000 position is only 2.5% of the portfolio, and if Anthropic's trajectory continues, the opportunity cost of not participating in what may be the defining private company of the decade could dwarf the downside of partial loss on a 2.5% position.</div>
+    <div class="sparring-text">Strongest counterargument: this summary may be too conservative. A $50,000 position is only 2.5% of the portfolio — if Anthropic's trajectory holds, the opportunity cost of not participating in the defining private company of the decade could dwarf the downside of a partial loss on a 2.5% position.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 2: COMPANY OVERVIEW ===== -->
+<!-- ===== 02 COMPANY OVERVIEW ===== -->
 <section class="section" id="overview">
-  <div class="section-header">
-    <div class="section-num">02</div>
-    <div>
-      <div class="section-title">Anthropic: Company Overview</div>
-      <div class="section-desc">Business model, valuation, investors, competitive position</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">02</span>
+    <span class="section-tag">Company Overview</span>
   </div>
+  <div class="section-title">Business Model, Valuation, Competitive Position</div>
+  <div class="section-desc">What Anthropic actually is and how fast it is growing</div>
 
   <h3>Business Model</h3>
-  <p>Anthropic operates across three revenue streams. Enterprise API access — sold to companies integrating Claude into products and workflows — drives roughly 80% of revenue. Consumer subscriptions (Claude.ai Pro and Team plans) contribute the remainder. A nascent government and defense channel (including Pentagon engagement) is emerging as a third leg. The company functions as an AI infrastructure layer: it sells intelligence as a service, priced per token, with volume discounts for enterprise commitments.</p>
+  <p>Anthropic operates across three revenue streams. Enterprise API access — sold to companies integrating Claude into products and workflows — drives roughly 80% of revenue. Consumer subscriptions (Claude.ai Pro and Team plans) contribute the remainder. A nascent government and defense channel is emerging. The company sells intelligence as a service, priced per token, with volume discounts for enterprise commitments.</p>
 
-  <h3>Revenue Growth — Verified</h3>
+  <h3>Revenue Growth</h3>
   <div class="stat-row">
     <div class="stat-card">
-      <div class="stat-card-label">Dec 2024 ARR</div>
-      <div class="stat-card-val">$1B</div>
-      <div class="stat-card-sub">Annualized run rate <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Dec 2024 ARR</div>
+      <div class="stat-val">$1B</div>
+      <div class="stat-sub">Annualized run rate <span class="tag tag-v">Verified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Feb 2026 ARR</div>
-      <div class="stat-card-val">$14B</div>
-      <div class="stat-card-sub">SaaStr sourced <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Feb 2026 ARR</div>
+      <div class="stat-val">$14B</div>
+      <div class="stat-sub">SaaStr <span class="tag tag-v">Verified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Apr 2026 ARR</div>
-      <div class="stat-card-val">$30B</div>
-      <div class="stat-card-sub">PYMNTS / Sacra <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Apr 2026 ARR</div>
+      <div class="stat-val clay">$30B</div>
+      <div class="stat-sub">PYMNTS / Sacra <span class="tag tag-v">Verified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">2028 Projection</div>
-      <div class="stat-card-val">$70B</div>
-      <div class="stat-card-sub">Company forecast <span class="tag tag-assumption">Assumption</span></div>
+      <div class="stat-label">2028 Target</div>
+      <div class="stat-val">$70B</div>
+      <div class="stat-sub">Company projection <span class="tag tag-a">Assumption</span></div>
     </div>
   </div>
 
-  <h3>Funding and Valuation</h3>
+  <h3>Funding Rounds</h3>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr>
-          <th>Round</th>
-          <th>Date</th>
-          <th>Amount Raised</th>
-          <th>Post-Money Valuation</th>
-          <th>Data Quality</th>
-        </tr>
+        <tr><th>Round</th><th>Date</th><th>Raised</th><th>Post-Money Valuation</th><th>Quality</th></tr>
       </thead>
       <tbody>
-        <tr><td>Series E</td><td>Mar 2025</td><td>$3.5B</td><td>$61.5B</td><td><span class="tag tag-verified">Verified</span></td></tr>
-        <tr><td>Series F</td><td>Sep 2025</td><td>$13B</td><td>$183B</td><td><span class="tag tag-verified">Verified</span></td></tr>
-        <tr><td>Series G</td><td>Feb 2026</td><td>$30B</td><td>$380B</td><td><span class="tag tag-verified">Verified</span></td></tr>
-        <tr><td>Reported Round</td><td>Apr/May 2026</td><td>~$50B</td><td>~$900B</td><td><span class="tag tag-unverified">Unverified — in discussion</span></td></tr>
+        <tr><td>Series E</td><td>Mar 2025</td><td>$3.5B</td><td>$61.5B</td><td><span class="tag tag-v">Verified</span></td></tr>
+        <tr><td>Series F</td><td>Sep 2025</td><td>$13B</td><td>$183B</td><td><span class="tag tag-v">Verified</span></td></tr>
+        <tr><td>Series G</td><td>Feb 2026</td><td>$30B</td><td>$380B</td><td><span class="tag tag-v">Verified</span></td></tr>
+        <tr><td>Reported Round</td><td>Apr/May 2026</td><td>~$50B</td><td>~$900B</td><td><span class="tag tag-u">Unverified — in discussion</span></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="source">Sources: Anthropic press releases, CNBC, TechCrunch (April 30, 2026)</p>
 
-  <h3>Key Investors and Strategic Partners</h3>
+  <h3>Strategic Investors</h3>
   <ul>
-    <li><strong>Amazon:</strong> Up to $33B committed total ($8B deployed + up to $25B additional, April 2026). AWS is Anthropic's primary cloud and training partner. Anthropic committed to 100B+ in AWS spend over 10 years. <span class="tag tag-verified">Verified</span></li>
-    <li><strong>Google:</strong> Up to $40B committed (April 2026), on top of prior $3B+ invested. Google Cloud/Vertex AI is a deployment partner. <span class="tag tag-verified">Verified</span></li>
-    <li><strong>Other investors:</strong> Sequoia, Spark Capital, Founders Fund, Fidelity, BlackRock, Blackstone, JPMorgan, TPG, Temasek. <span class="tag tag-verified">Verified</span></li>
-    <li><strong>Enterprise customers:</strong> Deloitte (470,000 employees), Snowflake ($200M multi-year deal), Accenture (strategic partnership), 300,000+ business customers. <span class="tag tag-verified">Verified</span></li>
+    <li><strong>Amazon:</strong> Up to $33B total committed ($8B deployed + up to $25B additional, April 2026). AWS is Anthropic's primary cloud partner. Anthropic committed to $100B+ in AWS spend over 10 years. <span class="tag tag-v">Verified</span></li>
+    <li><strong>Google:</strong> Up to $40B committed (April 2026), on top of prior $3B+ invested. Google Cloud/Vertex AI is a deployment partner. <span class="tag tag-v">Verified</span></li>
+    <li><strong>Others:</strong> Sequoia, Founders Fund, Fidelity, BlackRock, Blackstone, JPMorgan, TPG, Temasek. <span class="tag tag-v">Verified</span></li>
+    <li><strong>Enterprise customers:</strong> Deloitte (470,000 employees), Snowflake ($200M multi-year deal), Accenture. 300,000+ business customers; 1,000+ spending $1M+ annually. <span class="tag tag-v">Verified</span></li>
   </ul>
 
-  <h3>Competitive Position</h3>
+  <h3>Competitive Landscape</h3>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr><th>Competitor</th><th>Estimated ARR</th><th>Key Differentiator</th><th>Threat Level</th></tr>
+        <tr><th>Competitor</th><th>Est. ARR</th><th>Key Differentiator</th><th>Threat Level</th></tr>
       </thead>
       <tbody>
-        <tr><td>OpenAI</td><td>~$20B (Jan 2026)</td><td>Brand awareness, consumer base (~900M users), GPT-4o</td><td>Primary</td></tr>
-        <tr><td>Google DeepMind</td><td>Bundled into Google Cloud</td><td>Compute advantage, Gemini 2.0, vertical integration</td><td>Primary</td></tr>
-        <tr><td>Meta AI</td><td>Open-source (Llama), no direct monetization</td><td>Open weights drive commoditization pressure on API pricing</td><td>Structural</td></tr>
-        <tr><td>xAI (Grok)</td><td>Not publicly disclosed</td><td>X platform distribution, Musk brand</td><td>Emerging</td></tr>
+        <tr><td>OpenAI</td><td>~$20B (Jan 2026)</td><td>Brand, consumer base (~900M users), GPT-4o</td><td>Primary</td></tr>
+        <tr><td>Google DeepMind</td><td>Bundled into GCP</td><td>Compute advantage, Gemini, vertical integration</td><td>Primary</td></tr>
+        <tr><td>Meta AI (Llama)</td><td>Open-source, no direct monetization</td><td>Open weights drive API price commoditization</td><td>Structural</td></tr>
+        <tr><td>xAI (Grok)</td><td>Not disclosed</td><td>X platform distribution</td><td>Emerging</td></tr>
       </tbody>
     </table>
   </div>
-  <p>Anthropic's key differentiator is Constitutional AI — a safety-first training approach that has made it the preferred vendor for regulated industries and enterprises where liability matters. Anthropic passed OpenAI in run-rate revenue by April 2026 while reportedly spending 4x less on model training. <span class="tag tag-verified">Verified (SaaStr)</span></p>
 
-  <h3>Profitability</h3>
-  <p>Anthropic burned approximately $2.8 billion in 2025. The company projects cash flow positivity by 2028 at $17B cash flow on $70B revenue. Current gross margins are approximately 40% — below the 50%+ target, as compute costs exceeded projections. The company is not profitable and has no confirmed profitability timeline before 2028. <span class="tag tag-assumption">Modeled assumption — no audited financials public</span></p>
+  <p>Anthropic's key differentiator is Constitutional AI — a safety-first training approach that has made it the preferred vendor for regulated industries. It passed OpenAI in run-rate revenue by April 2026 while reportedly spending 4x less on model training. Cash burn in 2025 was approximately $2.8B; profitability is targeted for 2028. <span class="tag tag-a">Modeled — no audited financials public</span></p>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">The single biggest risk the overview does not fully price in: model commoditization. Meta's open-source Llama releases and Google's subsidized Gemini access create structural pressure on API pricing — if the price per token continues falling 50-80% annually, Anthropic's revenue growth could decelerate even as usage volume grows, compressing the path to the $70B revenue projection.</div>
+    <div class="sparring-text">The single biggest risk the overview does not fully price in: model commoditization — Meta's open-source Llama releases and Google's subsidized Gemini access create structural pressure on API pricing. Revenue growth could decelerate even as usage volume grows, compressing the path to the $70B projection.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 3: LIQUIDITY REALITY CHECK ===== -->
+<!-- ===== 03 LIQUIDITY ===== -->
 <section class="section" id="liquidity">
-  <div class="section-header">
-    <div class="section-num">03</div>
-    <div>
-      <div class="section-title">Liquidity Reality Check</div>
-      <div class="section-desc">What access actually means — and what it does not mean</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">03</span>
+    <span class="section-tag">Liquidity Reality Check</span>
   </div>
+  <div class="section-title">What Access Actually Means</div>
+  <div class="section-desc">A direct correction to a critical misconception — before anything else</div>
 
   <div class="alert">
-    <div class="alert-icon">⚠</div>
-    <div>
-      <div class="alert-label">Critical Misconception — Correct This First</div>
-      <div class="alert-text"><strong>Purchasing at IPO through Fidelity does not mean you can sell whenever you want.</strong> Pre-IPO shares purchased via secondary platforms carry indefinite illiquidity until an IPO occurs — and even then, retail IPO allocations through Fidelity are subject to a standard 25-day holding restriction plus a 90-180 day full lock-up post-IPO pricing. During the lock-up, you own the shares but cannot sell them. There is no emergency exit. This is not a liquid investment in any conventional sense. It is closer to a private equity commitment than a stock purchase.</div>
-    </div>
+    <div class="alert-label">Critical Misconception — Read This First</div>
+    <div class="alert-text"><strong>Purchasing at IPO through Fidelity does not mean you can sell whenever you want.</strong> Pre-IPO shares purchased via secondary platforms carry indefinite illiquidity until an IPO occurs — and even then, retail IPO allocations through Fidelity are subject to a 25-day mandatory hold plus a standard 90–180 day lock-up post-pricing. During the lock-up period, you own the shares but cannot sell them under any circumstances. There is no emergency exit. This is not a liquid investment. It is structurally closer to a private equity commitment than a stock purchase.</div>
   </div>
-
-  <h3>What "Pre-IPO Access" Actually Means</h3>
-  <p>Pre-IPO shares are secondary market transactions: a current Anthropic shareholder (employee, early investor) sells their shares to you through a platform like EquityZen or Forge Global. Anthropic itself receives no proceeds. You hold illiquid private shares with no guaranteed path to liquidity — an IPO must occur, and you must survive any lock-up imposed at that time.</p>
 
   <h3>What Fidelity Actually Offers</h3>
   <ul>
     <li>Fidelity offers IPO allocations — access to newly issued shares at IPO pricing, not pre-IPO secondary purchases</li>
-    <li>Eligibility threshold: <strong>$500,000 in eligible Fidelity assets</strong> (aggregated across retail accounts; 401k and annuity assets excluded). At $2M portfolio size, this investor likely qualifies. <span class="tag tag-verified">Verified — Fidelity.com</span></li>
-    <li>Meeting the threshold does not guarantee allocation — demand routinely far exceeds supply for high-profile IPOs</li>
-    <li>IPO shares through Fidelity carry a mandatory 25-day holding period, followed by a standard 90-180 day lock-up before freely tradeable</li>
-    <li>Fidelity does not offer pre-IPO secondary market access. For pre-IPO, the investor would need EquityZen, Forge Global, or similar platforms.</li>
+    <li>Eligibility: <strong>$500,000 in eligible Fidelity assets</strong> (aggregated across retail accounts; 401k and annuities excluded). At $2M this investor likely qualifies. <span class="tag tag-v">Verified — Fidelity.com</span></li>
+    <li>Meeting the threshold does not guarantee allocation — demand far exceeds supply for high-profile IPOs</li>
+    <li>Fidelity does not offer pre-IPO secondary market access. For pre-IPO, the investor would need EquityZen or Forge Global.</li>
+    <li>All IPO allocations through Fidelity carry a 25-day mandatory hold plus standard 90–180 day lock-up</li>
   </ul>
 
   <h3>Timeline to Freely Tradeable Shares</h3>
@@ -671,352 +1083,345 @@ strong { color: var(--text); font-weight: 600; }
         <tr><th>Pathway</th><th>Entry Point</th><th>IPO Target</th><th>Lock-Up</th><th>Freely Tradeable Est.</th></tr>
       </thead>
       <tbody>
-        <tr><td>Pre-IPO via EquityZen/Forge</td><td>Now (~$380-900B valuation)</td><td>Oct 2026 (reported, unconfirmed)</td><td>180 days post-IPO</td><td>Mid-2027 at earliest</td></tr>
-        <tr><td>IPO allocation via Fidelity</td><td>IPO date (if allocated)</td><td>Oct 2026 (reported)</td><td>25-day + 90-180 days</td><td>Early-to-mid 2027</td></tr>
-        <tr><td>ARKVX (ARK Venture Fund)</td><td>Now</td><td>N/A — interval fund</td><td>Quarterly redemption windows only</td><td>Structural illiquidity</td></tr>
-        <tr><td>DXYZ (Destiny Tech100)</td><td>NYSE-listed, trades daily</td><td>N/A</td><td>None — trades daily</td><td>Immediate (trades at massive NAV premium)</td></tr>
+        <tr><td>Pre-IPO via EquityZen/Forge</td><td>Now (~$380–900B)</td><td>Oct 2026 (reported, unconfirmed)</td><td>180 days post-IPO</td><td>Mid-2027 at earliest</td></tr>
+        <tr><td>IPO allocation via Fidelity</td><td>IPO date</td><td>Oct 2026</td><td>25 days + 90–180 days</td><td>Early-to-mid 2027</td></tr>
+        <tr><td>ARKVX (ARK Venture Fund)</td><td>Now</td><td>N/A</td><td>Quarterly redemption only</td><td>Structural illiquidity</td></tr>
+        <tr><td>DXYZ (Destiny Tech100)</td><td>NYSE, daily</td><td>N/A</td><td>None</td><td>Immediate — at massive NAV premium</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="highlight-box">
-    <strong>Bottom line on liquidity:</strong> Under the most optimistic IPO scenario (October 2026), a pre-IPO investor does not access freely tradeable shares until approximately mid-2027 — roughly 12-18 months from today. If the IPO is delayed or withdrawn, the horizon is indefinite. At 69, on fixed income, a 12-24 month capital lockup on $50,000 is meaningful. This is not catastrophic at 2.5% of portfolio, but it must be understood and accepted, not assumed away.
+  <div class="box">
+    <p><strong>Plain language:</strong> Under the most optimistic IPO scenario (October 2026), a pre-IPO investor does not hold freely tradeable shares until approximately mid-2027 — 12–18 months from today. If the IPO is delayed or withdrawn, the horizon is indefinite. At 69, on fixed income, a 12–24 month capital lockup on $50,000 is real and must be understood, not assumed away.</p>
   </div>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">The scenario where liquidity is better than described: Anthropic's $900B round reportedly closes within two weeks — if it does, an IPO process could accelerate significantly, potentially bringing publicly tradeable shares as early as Q4 2026, reducing the illiquidity window to under 9 months from a Fidelity IPO allocation perspective.</div>
+    <div class="sparring-text">The scenario where liquidity is better than described: Anthropic's reported $900B round could close within two weeks — if so, an IPO process could accelerate significantly, potentially bringing publicly tradeable shares as early as Q4 2026, reducing the illiquidity window to under 9 months from a Fidelity IPO allocation.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 4: PORTFOLIO CONTEXT ===== -->
+<!-- ===== 04 PORTFOLIO ===== -->
 <section class="section" id="portfolio">
-  <div class="section-header">
-    <div class="section-num">04</div>
-    <div>
-      <div class="section-title">Portfolio Context &amp; AI Exposure Audit</div>
-      <div class="section-desc">What you already own — and whether $50K adds or duplicates</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">04</span>
+    <span class="section-tag">Portfolio Context</span>
   </div>
+  <div class="section-title">AI Exposure Audit — What You Already Own</div>
+  <div class="section-desc">Whether $50K adds diversification or amplifies concentration</div>
 
-  <h3>Current AI and Tech Concentration</h3>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr><th>Holding</th><th>AI/Tech Exposure</th><th>Anthropic Connection</th><th>Notes</th></tr>
+        <tr><th>Holding</th><th>AI / Tech Exposure</th><th>Anthropic Connection</th><th>Notes</th></tr>
       </thead>
       <tbody>
-        <tr><td class="mono">NVDA</td><td>Pure AI infrastructure — GPU compute for training and inference</td><td>Indirect (all AI companies run on NVIDIA hardware)</td><td>Highest direct AI beta in portfolio</td></tr>
-        <tr><td class="mono">AMZN</td><td>AWS cloud + Amazon Bedrock (Claude API) + up to $33B invested in Anthropic</td><td><strong>Direct — major investor and cloud partner</strong></td><td>You already have indirect Anthropic exposure</td></tr>
-        <tr><td class="mono">AAPL</td><td>Apple Intelligence, on-device AI, potential Claude integration (reported)</td><td>Indirect</td><td>Lower AI beta; defensive tech</td></tr>
-        <tr><td class="mono">FDGRX</td><td>Fidelity Growth Company — heavily weighted to mega-cap tech/AI</td><td>Indirect via holdings</td><td>Top holdings likely include NVDA, MSFT, AMZN</td></tr>
-        <tr><td class="mono">FXAIX</td><td>S&P 500 Index — ~30-32% tech weighting</td><td>Indirect</td><td>Broad market; tech-heavy by construction</td></tr>
-        <tr><td class="mono">FFFDX</td><td>Fidelity Freedom 2020 — target date fund, equity-tilted for age</td><td>Minimal</td><td>Should be ~50-60% equity at this vintage; check current allocation</td></tr>
-        <tr><td class="mono">FBUF</td><td>Buffered equity — downside protection, market participation</td><td>Indirect</td><td>Defensive structure; lower AI concentration</td></tr>
-        <tr><td class="mono">FEQHX</td><td>Hedged equity — long/short; lower net exposure</td><td>Minimal</td><td>Risk-managed; less AI concentration</td></tr>
-        <tr><td class="mono">FSPSX</td><td>International index — minimal U.S. AI exposure</td><td>None</td><td>Good diversifier</td></tr>
-        <tr><td class="mono">FXNAX</td><td>U.S. Bond Index — no equity exposure</td><td>None</td><td>Core defensive position</td></tr>
-        <tr><td class="mono">TSLA</td><td>AI adjacency — FSD, Optimus robotics, Dojo compute</td><td>None</td><td>High volatility; growth-speculative</td></tr>
+        <tr><td class="mono">NVDA</td><td>Pure AI infrastructure — GPU compute for training and inference</td><td>Indirect (all AI runs on NVIDIA hardware)</td><td>Highest direct AI beta in portfolio</td></tr>
+        <tr><td class="mono">AMZN</td><td>AWS cloud + Bedrock (Claude API) + up to $33B invested in Anthropic</td><td><strong>Direct — major investor and cloud partner</strong></td><td>You already have indirect Anthropic exposure</td></tr>
+        <tr><td class="mono">AAPL</td><td>Apple Intelligence, on-device AI, potential Claude integration</td><td>Indirect</td><td>Lower AI beta; defensive tech</td></tr>
+        <tr><td class="mono">FDGRX</td><td>Fidelity Growth — heavily weighted to mega-cap tech/AI</td><td>Indirect via holdings</td><td>Top holdings likely include NVDA, MSFT, AMZN</td></tr>
+        <tr><td class="mono">FXAIX</td><td>S&P 500 Index — ~31% tech weighting</td><td>Indirect</td><td>Broad market; tech-heavy by construction</td></tr>
+        <tr><td class="mono">FFFDX</td><td>Fidelity Freedom 2020 — target date fund</td><td>Minimal</td><td>Should be ~50–60% equity at this vintage; check current allocation</td></tr>
+        <tr><td class="mono">TSLA</td><td>FSD, Optimus robotics, Dojo compute</td><td>None</td><td>High volatility; growth-speculative</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="highlight-box gold">
-    <strong>Key finding:</strong> This portfolio already has meaningful Anthropic exposure through Amazon (AMZN). Amazon's Anthropic stake — valued at approximately $13.8 billion — represents a significant portion of Amazon's non-core assets. An investor who owns AMZN already participates in Anthropic's upside, partially and indirectly, without any illiquidity risk. Adding a direct $50,000 Anthropic position would increase — not initiate — AI concentration and Anthropic-specific exposure.
+  <div class="box">
+    <p><strong>Key finding:</strong> This portfolio already has meaningful Anthropic exposure through Amazon. Amazon's Anthropic stake — valued at approximately $13.8B — represents significant non-core assets. An investor who owns AMZN already participates in Anthropic's upside, partially and indirectly, without any illiquidity risk. Adding a direct $50,000 Anthropic position increases — it does not initiate — AI concentration and Anthropic-specific exposure.</p>
   </div>
 
-  <h3>Age-Appropriateness of the Overall Portfolio</h3>
-  <p>Standard financial planning for a 69-year-old retiree on fixed income suggests a bond allocation of 50-70% (the classic rule of thumb: age in bonds = 69% fixed income). This portfolio, with NVDA, TSLA, AAPL, AMZN, FDGRX, FXAIX, and multiple growth-oriented funds alongside minimal bond exposure (only FXNAX visible), appears meaningfully overweight equities relative to the investor's stated risk tolerance and income situation. <span class="tag tag-judgment">Judgment call — full portfolio percentages not provided</span></p>
-
-  <p>This does not mean the portfolio is wrong — a $2M portfolio with pension income supplementing expenses can support growth equity exposure. But it does mean the baseline risk profile is higher than a moderate-to-low risk tolerance would suggest, and adding an illiquid speculative position should be evaluated in that context.</p>
+  <h3>Age-Appropriateness</h3>
+  <p>Standard financial planning for a 69-year-old retiree on fixed income suggests a bond allocation of 50–70%. This portfolio — with NVDA, TSLA, AAPL, AMZN, FDGRX, FXAIX, and multiple growth funds alongside minimal bond exposure (only FXNAX visible) — appears meaningfully overweight equities relative to the stated risk tolerance. <span class="tag tag-j">Judgment — full portfolio percentages not provided</span></p>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">The argument that the $50K allocation is fine: at 2.5% of a $2M portfolio, complete loss of the Anthropic position would reduce total wealth by 2.5% — manageable for any investor with a pension covering living expenses, and potentially trivial relative to the upside if Anthropic performs in line with its growth trajectory.</div>
+    <div class="sparring-text">The argument that the $50K allocation is fine: at 2.5% of a $2M portfolio with pension income covering living expenses, complete loss of this position reduces total wealth by 2.5% — manageable, and potentially trivial relative to the upside if Anthropic performs in line with its current trajectory.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 5: VALUATION & SCENARIOS ===== -->
+<!-- ===== 05 VALUATION ===== -->
 <section class="section" id="valuation">
-  <div class="section-header">
-    <div class="section-num">05</div>
-    <div>
-      <div class="section-title">Valuation &amp; Return Scenario Framework</div>
-      <div class="section-desc">What you are paying, what comparables suggest, and what each scenario returns</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">05</span>
+    <span class="section-tag">Valuation &amp; Scenarios</span>
   </div>
+  <div class="section-title">What You Are Paying — and What It Returns</div>
+  <div class="section-desc">Current valuation in context, comparable multiples, and scenario analysis on $50,000</div>
 
-  <h3>Current Valuation in Context</h3>
   <div class="stat-row">
     <div class="stat-card">
-      <div class="stat-card-label">Current Valuation</div>
-      <div class="stat-card-val">$380B</div>
-      <div class="stat-card-sub">Series G, Feb 2026 <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Series G Valuation</div>
+      <div class="stat-val clay">$380B</div>
+      <div class="stat-sub">Feb 2026 <span class="tag tag-v">Verified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Reported New Round</div>
-      <div class="stat-card-val">$900B</div>
-      <div class="stat-card-sub">In discussion, May 2026 <span class="tag tag-unverified">Unverified</span></div>
+      <div class="stat-label">Reported Round</div>
+      <div class="stat-val">$900B</div>
+      <div class="stat-sub">Apr 2026 discussion <span class="tag tag-u">Unverified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Current ARR</div>
-      <div class="stat-card-val">$30B</div>
-      <div class="stat-card-sub">Apr 2026 run rate <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Current ARR</div>
+      <div class="stat-val">$30B</div>
+      <div class="stat-sub">Apr 2026 run rate <span class="tag tag-v">Verified</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">EV/ARR Multiple</div>
-      <div class="stat-card-val">~13x</div>
-      <div class="stat-card-sub">At $380B / $30B ARR <span class="tag tag-assumption">Modeled</span></div>
+      <div class="stat-label">EV/ARR at $380B</div>
+      <div class="stat-val">~13x</div>
+      <div class="stat-sub"><span class="tag tag-a">Modeled</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">EV/ARR if $900B round</div>
-      <div class="stat-card-val">~30x</div>
-      <div class="stat-card-sub">At $900B / $30B ARR <span class="tag tag-assumption">Modeled</span></div>
+      <div class="stat-label">EV/ARR at $900B</div>
+      <div class="stat-val">~30x</div>
+      <div class="stat-sub"><span class="tag tag-a">Modeled</span></div>
     </div>
     <div class="stat-card">
-      <div class="stat-card-label">Palantir EV/Revenue</div>
-      <div class="stat-card-val">65-81x</div>
-      <div class="stat-card-sub">Public comp <span class="tag tag-verified">Verified</span></div>
+      <div class="stat-label">Palantir EV/Revenue</div>
+      <div class="stat-val">65–81x</div>
+      <div class="stat-sub">Public comp <span class="tag tag-v">Verified</span></div>
     </div>
   </div>
 
-  <h3>Variant Perception: What Is the Market Getting Right and Wrong?</h3>
+  <h3>Variant Perception</h3>
   <div class="two-col">
-    <div class="highlight-box">
-      <strong style="color:var(--green)">What the market has right:</strong>
-      <ul style="margin-top:10px;">
+    <div class="two-col-item">
+      <h4 style="color:var(--risk-low-fg);">What the Market Has Right</h4>
+      <ul>
         <li>Revenue growth velocity is unprecedented for a company this size</li>
         <li>Enterprise moat via safety positioning in regulated industries is real and defensible</li>
         <li>Amazon and Google's structural dependence on Anthropic as a model provider creates a floor on the business</li>
-        <li>The $70B 2028 projection, if achieved, would make current $380B valuation look cheap at 5-6x forward revenue</li>
+        <li>At $70B 2028 revenue, current $380B valuation looks cheap at 5–6x forward</li>
       </ul>
     </div>
-    <div class="highlight-box">
-      <strong style="color:var(--red)">What the market may have wrong:</strong>
-      <ul style="margin-top:10px;">
-        <li>Token pricing is falling 50-80% per year — revenue growth requires exponential volume to offset price erosion</li>
+    <div class="two-col-item right-col">
+      <h4 style="color:var(--risk-high-fg);">What the Market May Have Wrong</h4>
+      <ul>
+        <li>Token pricing is falling 50–80% per year — revenue growth requires exponential volume to offset price erosion</li>
         <li>Amazon and Google are investors AND competitors — strategic conflict is unresolved</li>
-        <li>No audited financials have been made public; $30B ARR is third-party estimate, not reported revenue</li>
-        <li>At $900B, Anthropic would be valued near Walmart and Berkshire Hathaway — with no profitability and significant burn</li>
+        <li>No audited financials are public; $30B ARR is third-party estimate</li>
+        <li>At $900B, Anthropic would be valued near Walmart with no profitability and significant burn</li>
       </ul>
     </div>
   </div>
 
-  <h3>Return Scenarios on $50,000 Investment</h3>
-  <p style="color:var(--muted);font-size:13px;margin-bottom:4px;">All scenarios assume entry at $380B valuation (Series G). If entry is at $900B reported round, adjust returns downward by ~58%.</p>
+  <h3>Return Scenarios on $50,000</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:4px;">All scenarios assume entry at $380B (Series G). If entering at $900B reported round, adjust returns downward ~58%.</p>
 
   <div class="scenario-grid">
     <div class="scenario-card bear">
-      <div class="scenario-header">
-        <div class="scenario-label">Bear Case</div>
-        <div class="scenario-val">$15,000 – $30,000</div>
+      <div class="scenario-head">
+        <div class="scenario-badge">Bear Case</div>
+        <div class="scenario-top-line">$15,000–$30,000</div>
       </div>
       <div class="scenario-body">
-        <div class="scenario-row"><span class="scenario-row-label">Return on $50K</span><span class="scenario-row-val" style="color:var(--red)">-40% to -70%</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">IPO Valuation</span><span class="scenario-row-val">$150B – $250B</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">Liquidity Horizon</span><span class="scenario-row-val">2028+</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">2028 Revenue</span><span class="scenario-row-val">$20B – $35B</span></div>
-        <div class="scenario-assumption"><span class="tag tag-assumption">Assumptions</span> Token pricing collapse compresses revenue growth. OpenAI or Google win enterprise share. IPO delayed to 2028 amid market downturn. Multiple compresses to 6-8x revenue at IPO.</div>
+        <div class="s-row"><span class="s-label">Return on $50K</span><span class="s-val">-40% to -70%</span></div>
+        <div class="s-row"><span class="s-label">IPO Valuation</span><span class="s-val">$150B–$250B</span></div>
+        <div class="s-row"><span class="s-label">2028 Revenue</span><span class="s-val">$20B–$35B</span></div>
+        <div class="s-row"><span class="s-label">Liquidity Horizon</span><span class="s-val">2028+</span></div>
+        <div class="scenario-note">Token pricing collapse compresses revenue. OpenAI or Google win enterprise share. IPO delayed to 2028. Multiple compresses to 6–8x revenue at IPO.</div>
       </div>
     </div>
     <div class="scenario-card base">
-      <div class="scenario-header">
-        <div class="scenario-label">Base Case</div>
-        <div class="scenario-val">$55,000 – $85,000</div>
+      <div class="scenario-head">
+        <div class="scenario-badge">Base Case</div>
+        <div class="scenario-top-line">$55,000–$85,000</div>
       </div>
       <div class="scenario-body">
-        <div class="scenario-row"><span class="scenario-row-label">Return on $50K</span><span class="scenario-row-val" style="color:var(--amber)">+10% to +70%</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">IPO Valuation</span><span class="scenario-row-val">$400B – $600B</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">Liquidity Horizon</span><span class="scenario-row-val">Mid-2027</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">2028 Revenue</span><span class="scenario-row-val">$50B – $65B</span></div>
-        <div class="scenario-assumption"><span class="tag tag-assumption">Assumptions</span> IPO October 2026 at modest premium to current valuation. Revenue grows toward $70B projection with some deceleration. 13-18x forward revenue multiple at IPO. Lock-up expires early 2027.</div>
+        <div class="s-row"><span class="s-label">Return on $50K</span><span class="s-val">+10% to +70%</span></div>
+        <div class="s-row"><span class="s-label">IPO Valuation</span><span class="s-val">$400B–$600B</span></div>
+        <div class="s-row"><span class="s-label">2028 Revenue</span><span class="s-val">$50B–$65B</span></div>
+        <div class="s-row"><span class="s-label">Liquidity Horizon</span><span class="s-val">Mid-2027</span></div>
+        <div class="scenario-note">IPO October 2026 at modest premium to current valuation. Revenue grows toward $70B projection with some deceleration. 13–18x forward multiple at IPO.</div>
       </div>
     </div>
     <div class="scenario-card bull">
-      <div class="scenario-header">
-        <div class="scenario-label">Bull Case</div>
-        <div class="scenario-val">$150,000 – $300,000</div>
+      <div class="scenario-head">
+        <div class="scenario-badge">Bull Case</div>
+        <div class="scenario-top-line">$150,000–$300,000</div>
       </div>
       <div class="scenario-body">
-        <div class="scenario-row"><span class="scenario-row-label">Return on $50K</span><span class="scenario-row-val" style="color:var(--green)">+200% to +500%</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">IPO Valuation</span><span class="scenario-row-val">$1T – $2T</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">Liquidity Horizon</span><span class="scenario-row-val">Late 2026 – 2027</span></div>
-        <div class="scenario-row"><span class="scenario-row-label">2028 Revenue</span><span class="scenario-row-val">$70B+</span></div>
-        <div class="scenario-assumption"><span class="tag tag-assumption">Assumptions</span> Revenue hits $70B 2028 target on schedule. AGI narrative drives Palantir-like 30-50x revenue multiple. IPO is oversubscribed. Agentic AI drives step-change in enterprise spending. Anthropic captures 30%+ of AI infrastructure market.</div>
+        <div class="s-row"><span class="s-label">Return on $50K</span><span class="s-val">+200% to +500%</span></div>
+        <div class="s-row"><span class="s-label">IPO Valuation</span><span class="s-val">$1T–$2T</span></div>
+        <div class="s-row"><span class="s-label">2028 Revenue</span><span class="s-val">$70B+</span></div>
+        <div class="s-row"><span class="s-label">Liquidity Horizon</span><span class="s-val">Late 2026–2027</span></div>
+        <div class="scenario-note">Revenue hits $70B on schedule. AGI narrative drives 30–50x revenue multiple. IPO oversubscribed. Agentic AI drives step-change in enterprise spend.</div>
       </div>
     </div>
   </div>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">The scenario where the base case is most dangerous: if Anthropic raises at $900B in the next two weeks, the base case above overstates returns by 58% — meaning "base case" entry at $900B with a $500-600B IPO valuation would actually produce a loss, making the "average expectation" the scenario where an investor who follows the news and buys in at the highest private round loses money at IPO.</div>
+    <div class="sparring-text">The scenario where base case is most dangerous: if Anthropic raises at $900B in the next two weeks, base case entry produces a loss at IPO — meaning "average expectations" is the exact scenario where a retail investor who follows the news and buys in at the highest private round loses money.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 6: ACCESS PATHWAYS ===== -->
+<!-- ===== 06 ACCESS ===== -->
 <section class="section" id="access">
-  <div class="section-header">
-    <div class="section-num">06</div>
-    <div>
-      <div class="section-title">Access Pathways Through Fidelity</div>
-      <div class="section-desc">How to actually get into this trade — and what each route costs you</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">06</span>
+    <span class="section-tag">Access Pathways</span>
   </div>
+  <div class="section-title">How to Get Into This Trade</div>
+  <div class="section-desc">What each route actually costs you — structurally, not just financially</div>
 
   <div class="pathway-grid">
     <div class="pathway-card">
-      <div class="pathway-name">Fidelity IPO Allocation</div>
-      <span class="pathway-tag" style="background:var(--amber-dim);color:var(--amber);">Conditional Access</span>
-      <div class="pathway-desc">Requires $500,000+ in eligible Fidelity assets. This investor likely qualifies. Allocation is not guaranteed — demand will far exceed supply for an Anthropic IPO. Entry at IPO price (not pre-IPO). Standard 25-day hold + 90-180 day lock-up post-pricing. <strong>This is the cleanest pathway if allocated.</strong></div>
+      <div class="p-name">Fidelity IPO Allocation</div>
+      <span class="p-badge cond">Conditional Access</span>
+      <div class="p-desc">Requires $500,000+ in eligible Fidelity assets. This investor likely qualifies. Allocation is not guaranteed — demand far exceeds supply for a high-profile IPO. Entry at IPO price (not peak private valuation). Standard 25-day hold plus 90–180 day lock-up. The cleanest pathway if allocated.</div>
     </div>
     <div class="pathway-card">
-      <div class="pathway-name">EquityZen / Forge Global</div>
-      <span class="pathway-tag" style="background:var(--red-dim);color:var(--red);">Accredited Investors Only</span>
-      <div class="pathway-desc">Requires accredited investor status ($1M net worth ex-primary residence, or $200K+ income). Anthropic shares actively listed on Forge; described as "extremely scarce." Implied valuations near $900B-$1T. Minimum $25,000+. Indefinite illiquidity until IPO. Secondary market spread and platform fees erode returns further.</div>
+      <div class="p-name">EquityZen / Forge Global</div>
+      <span class="p-badge hard">Accredited Only</span>
+      <div class="p-desc">Requires accredited investor status ($1M net worth ex-primary residence). Anthropic shares listed on Forge; described as "extremely scarce." Implied secondary valuations near $900B–$1T. Minimum $25,000+. Indefinite illiquidity until IPO. Platform fees and spread erode returns further.</div>
     </div>
-    <div class="pathway-card recommended">
-      <div class="pathway-name">ARK Venture Fund (ARKVX)</div>
-      <span class="pathway-tag" style="background:var(--gold-dim);color:var(--gold);">Recommended Proxy</span>
-      <div class="pathway-desc">Confirmed Anthropic holding — one of its largest positions. AUM ~$654M. 1-year return ~67%. Accredited investors only. Interval fund: quarterly redemption windows, not daily liquidity. 2.9% expense ratio. Also holds SpaceX, Databricks, Epic Games. Best diversified private-tech exposure for this investor profile.</div>
+    <div class="pathway-card rec">
+      <div class="p-name">ARK Venture Fund (ARKVX)</div>
+      <span class="p-badge rec">Recommended Proxy</span>
+      <div class="p-desc">Confirmed Anthropic holding — one of its largest positions. AUM ~$654M. 1-year return ~67%. Accredited investors only. Interval fund — quarterly redemption windows, not daily liquidity. 2.9% expense ratio. Also holds SpaceX, Databricks, Epic Games. Best diversified private-tech vehicle for this profile.</div>
     </div>
     <div class="pathway-card">
-      <div class="pathway-name">Destiny Tech100 (DXYZ)</div>
-      <span class="pathway-tag" style="background:var(--green-dim);color:var(--green);">NYSE Listed — Daily Liquidity</span>
-      <div class="pathway-desc">Trades on NYSE daily. Added Anthropic exposure January 2026 via $100M investment. Portfolio: 32 private tech companies. NAV ~$19.97/share. <strong>Trades at a massive premium to NAV (historically 100%+)</strong> — meaning you are paying 2x the underlying asset value for daily liquidity. Lowest quality risk-adjusted pathway but only option with true daily liquidity.</div>
+      <div class="p-name">Destiny Tech100 (DXYZ)</div>
+      <span class="p-badge open">NYSE Listed</span>
+      <div class="p-desc">Trades daily on NYSE. Added Anthropic exposure January 2026. Portfolio: 32 private tech companies. NAV ~$19.97/share. <strong>Trades at a massive premium to NAV (historically 100%+)</strong> — you pay 2x the underlying asset value for daily liquidity. Lowest quality risk-adjusted pathway.</div>
     </div>
   </div>
 
-  <h3>Recommended Pathway for This Investor</h3>
-  <div class="highlight-box gold">
-    <strong>If the investor wants Anthropic exposure:</strong> Register interest in the Fidelity IPO allocation the moment Anthropic files an S-1. That is the highest-quality, lowest-friction entry point — no accredited investor requirement, entry at IPO price (not peak private valuation), and the cleanest access through existing accounts. Meanwhile, consider ARKVX for a portion of the $50K as a diversified private-tech proxy with Anthropic exposure that does not require waiting for an IPO.
+  <div class="box">
+    <p><strong>Recommended pathway for this investor:</strong> Register interest in the Fidelity IPO allocation the moment Anthropic files an S-1. That is the highest-quality, lowest-friction entry — no accredited investor requirement, entry at IPO price, and full integration with existing accounts. Meanwhile, consider ARKVX for a portion of the $50K as a diversified private-tech proxy with Anthropic exposure that does not require waiting for an IPO.</p>
   </div>
 </section>
 
-<!-- ===== SECTION 7: RISK REGISTER ===== -->
+<!-- ===== 07 RISKS ===== -->
 <section class="section" id="risks">
-  <div class="section-header">
-    <div class="section-num">07</div>
-    <div>
-      <div class="section-title">Risk Register</div>
-      <div class="section-desc">Every material risk, severity-rated</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">07</span>
+    <span class="section-tag">Risk Register</span>
   </div>
+  <div class="section-title">Every Material Risk, Rated</div>
+  <div class="section-desc">Eight risks, severity-coded, with mitigations</div>
 
   <div class="risk-grid">
     <div class="risk-card">
-      <div class="risk-header">
+      <div class="risk-card-top">
         <div class="risk-name">Illiquidity Risk</div>
-        <span class="severity-badge sev-high">High</span>
+        <span class="sev sev-h">High</span>
       </div>
       <div class="risk-likelihood">Likelihood: Certain (structural)</div>
-      <div class="risk-desc">Pre-IPO shares have no exit until Anthropic goes public. Even IPO allocations carry 90-180 day lock-ups. At 69, a 12-24 month capital lockup on $50,000 is not catastrophic but is real and must be planned for.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Size so that $50K frozen for 24 months has zero impact on living expenses or emergency needs. Confirm pension covers all living costs without touching this capital.</div>
+      <div class="risk-desc">Pre-IPO shares have no exit until an IPO occurs. Even IPO allocations carry 90–180 day lock-ups. At 69, a 12–24 month capital lockup on $50,000 is not catastrophic but is real and must be accepted in advance.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Size so that $50K frozen for 24 months has zero impact on living expenses. Confirm pension covers all living costs independently of this position.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Valuation Compression Risk</div>
-        <span class="severity-badge sev-high">High</span>
+      <div class="risk-card-top">
+        <div class="risk-name">Valuation Compression</div>
+        <span class="sev sev-h">High</span>
       </div>
       <div class="risk-likelihood">Likelihood: Moderate — elevated if entering at $900B</div>
-      <div class="risk-desc">Buying at or near peak private valuation ($380B-$900B) means the IPO must maintain or expand that multiple for returns to materialize. High-profile tech IPOs frequently trade below their last private round in the first 6-12 months.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Wait for Fidelity IPO allocation rather than pre-IPO secondary market entry. IPO pricing tends to be set at a modest discount to drive demand, giving public investors a better entry than late-stage private investors.</div>
+      <div class="risk-desc">Buying near peak private valuation means the IPO must maintain or expand the multiple for returns to materialize. High-profile tech IPOs frequently trade below their last private round in the first 6–12 months.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Wait for Fidelity IPO allocation rather than pre-IPO secondary entry. IPO pricing is typically set at a modest discount to drive demand.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Concentration Risk</div>
-        <span class="severity-badge sev-high">High</span>
+      <div class="risk-card-top">
+        <div class="risk-name">AI Concentration Risk</div>
+        <span class="sev sev-h">High</span>
       </div>
       <div class="risk-likelihood">Likelihood: Certain — already present</div>
-      <div class="risk-desc">Portfolio already holds NVDA (pure AI), AMZN (major Anthropic investor), AAPL (AI integration), FDGRX and FXAIX (tech-heavy). Adding Anthropic is not diversification — it is AI concentration amplification.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> If proceeding, consider reducing NVDA or TSLA position to fund the Anthropic bet rather than adding net exposure. Or frame the $50K as replacing, not adding to, growth allocation.</div>
+      <div class="risk-desc">Portfolio already holds NVDA, AMZN (Anthropic investor), AAPL, FDGRX, FXAIX. Adding Anthropic is not diversification — it is AI concentration amplification.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> If proceeding, consider reducing NVDA or TSLA to fund the Anthropic position rather than adding net exposure. Frame it as a reallocation, not an addition.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Regulatory / AI Policy Risk</div>
-        <span class="severity-badge sev-med">Medium</span>
+      <div class="risk-card-top">
+        <div class="risk-name">Regulatory / Policy Risk</div>
+        <span class="sev sev-m">Medium</span>
       </div>
-      <div class="risk-likelihood">Likelihood: Low in near term; material over 3-5 year horizon</div>
-      <div class="risk-desc">Comprehensive AI regulation in the U.S. or EU could constrain model deployment, mandate compute limits, or create liability frameworks that increase compliance costs. An EU AI Act equivalent applied to foundation models would hit Anthropic directly.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Anthropic's Constitutional AI safety positioning is partially a hedge against this — it is designed to be regulatorily defensible. Safety focus gives it a better posture than competitors.</div>
+      <div class="risk-likelihood">Likelihood: Low near-term; material over 3–5 years</div>
+      <div class="risk-desc">Comprehensive AI regulation in the U.S. or EU could constrain model deployment, mandate compute limits, or create liability frameworks that increase compliance costs for foundation model providers.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Anthropic's Constitutional AI safety positioning is partially a hedge — designed to be regulatorily defensible relative to competitors.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Technology Disruption Risk</div>
-        <span class="severity-badge sev-med">Medium</span>
+      <div class="risk-card-top">
+        <div class="risk-name">Technology Disruption</div>
+        <span class="sev sev-m">Medium</span>
       </div>
-      <div class="risk-likelihood">Likelihood: Moderate — model commoditization is already occurring</div>
-      <div class="risk-desc">Meta's open-source Llama releases and falling token prices mean AI models are commoditizing faster than projected. If Claude becomes a commodity, Anthropic's pricing power erodes and revenue multiples collapse regardless of volume growth.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Monitor Anthropic's gross margin trajectory quarterly. If margins expand toward 60%+, the moat is holding. If margins compress below 30%, the business model is under structural pressure.</div>
+      <div class="risk-likelihood">Likelihood: Moderate — commoditization already occurring</div>
+      <div class="risk-desc">Meta's open-source Llama and falling token prices mean AI models are commoditizing faster than projected. If Claude becomes a commodity, pricing power erodes and revenue multiples collapse regardless of volume growth.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Monitor gross margin trajectory — if margins expand toward 60%+, the moat is holding. If margins compress below 30%, the business model is under structural pressure.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Tax Treatment Risk (IRA)</div>
-        <span class="severity-badge sev-med">Medium</span>
+      <div class="risk-card-top">
+        <div class="risk-name">Tax Treatment (IRA)</div>
+        <span class="sev sev-m">Medium</span>
       </div>
       <div class="risk-likelihood">Likelihood: Low for IPO allocation; High for private placement in IRA</div>
-      <div class="risk-desc">Private placements held in IRAs can generate Unrelated Business Taxable Income (UBTI) — taxable income inside a tax-advantaged account. If Anthropic shares are held via a partnership structure in an IRA, UBTI taxes may apply on gains. IPO shares purchased at IPO and held in IRA are generally not subject to UBTI.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Consult a CPA before placing any pre-IPO shares in an IRA account. For IPO allocation, use the taxable brokerage account to avoid complexity. Long-term capital gains treatment in taxable account may be preferable anyway.</div>
+      <div class="risk-desc">Private placements held in IRAs can generate Unrelated Business Taxable Income (UBTI) — taxable income inside a tax-advantaged account. Gains from partnership structures inside an IRA may face unexpected tax liability.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Consult a CPA before placing any pre-IPO shares in an IRA account. For IPO allocation, use the taxable brokerage — long-term capital gains treatment in taxable is likely preferable anyway.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
+      <div class="risk-card-top">
         <div class="risk-name">Behavioral Risk</div>
-        <span class="severity-badge sev-med">Medium</span>
+        <span class="sev sev-m">Medium</span>
       </div>
-      <div class="risk-likelihood">Likelihood: High — by definition present when "brand" drives investment thesis</div>
-      <div class="risk-desc">The desire to invest in Anthropic because it is a recognized AI leader — rather than because of a specific valuation thesis — is a form of narrative anchoring. "It is a great company" and "it is a good investment at this price" are different questions.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Before committing, write down: what specific valuation multiple is being paid, what revenue level would justify that multiple, and at what price would the investment become unattractive. If those questions do not have answers, that is the data point.</div>
+      <div class="risk-likelihood">Likelihood: High — by definition present with narrative-driven investment</div>
+      <div class="risk-desc">The desire to invest in Anthropic because it is a recognized AI leader — rather than because of a specific valuation thesis — is narrative anchoring. "It is a great company" and "it is a good investment at this price" are different questions.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Before committing, write down: what multiple is being paid, what revenue would justify it, at what price the investment becomes unattractive. If those questions lack answers, that is the data point.</div>
     </div>
+
     <div class="risk-card">
-      <div class="risk-header">
-        <div class="risk-name">Income Risk</div>
-        <span class="severity-badge sev-low">Low</span>
+      <div class="risk-card-top">
+        <div class="risk-name">Income / Liquidity Need Risk</div>
+        <span class="sev sev-l">Low</span>
       </div>
-      <div class="risk-likelihood">Likelihood: Low at 2.5% sizing</div>
-      <div class="risk-desc">A fixed-income retiree taking an illiquid speculative position risks needing that capital during the lock-up period. At 2.5% of portfolio with pension income, this is manageable — but requires confirming that $50K is genuinely discretionary.</div>
-      <div class="risk-mitigation"><strong>Mitigation:</strong> Confirm 12-month emergency fund is intact and fully separate from any investment in Anthropic. Never use money earmarked for income needs in an illiquid position.</div>
+      <div class="risk-likelihood">Likelihood: Low at 2.5% sizing with pension income</div>
+      <div class="risk-desc">A fixed-income retiree taking an illiquid speculative position risks needing that capital during the lock-up. At 2.5% of portfolio with pension covering expenses, this is manageable — but requires confirmation that $50K is genuinely discretionary.</div>
+      <div class="risk-mit"><strong>Mitigation:</strong> Confirm 12-month emergency fund is intact and fully separate from this position. Never use income-earmarked capital in an illiquid investment.</div>
     </div>
   </div>
 
   <div class="sparring">
     <div class="sparring-label">Sparring Partner Check</div>
-    <div class="sparring-text">The most underweighted risk by the average retail investor: valuation compression — most retail participants thinking about this investment are evaluating whether Anthropic is a great company (it is) rather than whether they are buying it at a rational price relative to what it might trade at in 18 months at IPO, where late-stage private investors frequently get reset below their entry.</div>
+    <div class="sparring-text">The most underweighted risk by the average retail investor: valuation compression — most people evaluate whether Anthropic is a great company (it is) rather than whether they are buying at a rational price relative to where it might trade 18 months from now at IPO, where late-stage private investors frequently get reset below their entry.</div>
   </div>
 </section>
 
-<!-- ===== SECTION 8: BOTTOM LINE ===== -->
+<!-- ===== 08 BOTTOM LINE ===== -->
 <section class="section" id="bottom">
-  <div class="section-header">
-    <div class="section-num">08</div>
-    <div>
-      <div class="section-title">Bottom Line</div>
-      <div class="section-desc">Structured view — not a hard yes or no</div>
-    </div>
+  <div class="section-eyebrow">
+    <span class="section-num">08</span>
+    <span class="section-tag">Bottom Line</span>
   </div>
+  <div class="section-title">Structured View — Not a Hard Yes or No</div>
+  <div class="section-desc">What to do if you proceed, what to do if you don't, and the one condition that changes everything</div>
 
   <div class="bottom-grid">
-    <div class="bottom-card proceed">
-      <div class="bottom-label amber">If the investor proceeds</div>
+    <div class="b-card">
+      <div class="b-label amber">If the investor proceeds</div>
       <ul>
-        <li><strong>Pathway:</strong> Register for Fidelity IPO allocation the moment Anthropic files an S-1 — do not attempt pre-IPO secondary market entry at $900B valuation. IPO pricing is set at a discount to drive demand; late-stage private entry is not.</li>
-        <li><strong>Account type:</strong> Taxable brokerage account, not IRA. Avoids UBTI complexity entirely. Long-term capital gains treatment available after 1-year hold post-IPO.</li>
-        <li><strong>Sizing:</strong> Keep at $50,000 maximum — 2.5% of portfolio. Do not increase on enthusiasm. Set a mental stop: if the position falls 50%, reassess rather than averaging down.</li>
-        <li><strong>Before committing, confirm:</strong> (1) $50K is not needed for 24 months under any scenario. (2) Emergency fund is intact and separate. (3) NVDA or TSLA position has been reviewed — if reducing one of those to fund Anthropic, net AI exposure stays flat.</li>
-        <li><strong>Interim proxy:</strong> Consider allocating $25,000-$30,000 to ARKVX now for Anthropic exposure with a broader private-tech basket while waiting for the IPO. Remaining $20-25K held in cash for the IPO allocation attempt.</li>
+        <li><strong>Pathway:</strong> Register for the Fidelity IPO allocation the moment Anthropic files an S-1. Do not attempt pre-IPO secondary entry at $900B. IPO pricing is set at a discount to drive demand; late-stage private entry is not.</li>
+        <li><strong>Account type:</strong> Taxable brokerage, not IRA. Avoids UBTI complexity. Long-term capital gains treatment available after one year post-IPO.</li>
+        <li><strong>Sizing:</strong> Hold at $50,000 maximum — 2.5% of portfolio. Do not increase on enthusiasm. Set a mental floor: if position falls 50%, reassess rather than averaging down.</li>
+        <li><strong>Before committing:</strong> Confirm $50K is not needed for 24 months under any scenario. Confirm emergency fund is intact. Review NVDA or TSLA — if reducing one to fund Anthropic, net AI exposure stays flat.</li>
+        <li><strong>Interim proxy:</strong> Consider $25–30K in ARKVX now for Anthropic exposure via a diversified basket while waiting for the IPO. Hold remaining $20–25K in cash for the IPO allocation attempt.</li>
       </ul>
     </div>
-    <div class="bottom-card alt">
-      <div class="bottom-label green">If the investor does not proceed</div>
+    <div class="b-card">
+      <div class="b-label green">If the investor does not proceed</div>
       <ul>
-        <li><strong>You already have Anthropic exposure.</strong> AMZN is one of Anthropic's two largest investors — holding Amazon captures meaningful Anthropic upside with zero illiquidity, no lock-up, and full daily liquidity. This is not a consolation prize; it is a structurally superior vehicle for a retiree.</li>
-        <li><strong>ARKVX</strong> gives diversified private-tech exposure including Anthropic, SpaceX, and Databricks with quarterly liquidity — better risk-adjusted alternative to a single-name private bet.</li>
+        <li><strong>You already have Anthropic exposure.</strong> AMZN is one of Anthropic's two largest investors. Holding Amazon captures meaningful upside with zero illiquidity and full daily liquidity. This is not a consolation prize — it is a structurally superior vehicle for a retiree.</li>
+        <li><strong>ARKVX</strong> provides diversified private-tech exposure including Anthropic, SpaceX, and Databricks with quarterly liquidity — better risk-adjusted alternative to a single-name private bet.</li>
         <li><strong>NVDA</strong> already in the portfolio is the purest beneficiary of AI compute demand, regardless of which model wins.</li>
         <li><strong>The AI thesis is fully accessible without direct Anthropic exposure.</strong> The bet on AI infrastructure is already in this portfolio. A direct Anthropic position is a bet on a specific company at a specific price — and that price may already reflect perfection.</li>
       </ul>
     </div>
   </div>
 
-  <div class="highlight-box gold" style="margin-top:32px;">
-    <strong>The critical condition:</strong> The single factor that would flip this recommendation from cautious to constructive is the IPO pricing. If Anthropic prices its IPO at $250-350B (a down-round from the $380B Series G), it would represent a genuine entry discount into a company generating $30B+ ARR — and at that valuation, the base case returns become meaningfully asymmetric. If the IPO prices at or above $380B (or worse, at a rumored $900B), the risk-reward for a 69-year-old retiree becomes structurally unfavorable. Watch the S-1 filing closely. Price matters more than story.
+  <div class="box" style="margin-top:32px;">
+    <p><strong>The critical condition:</strong> The single factor that would flip this recommendation from cautious to constructive is the IPO pricing. If Anthropic prices its IPO at $250–350B — a down-round from the Series G $380B — it represents a genuine entry discount into a company generating $30B+ ARR, and the base case returns become meaningfully asymmetric. If the IPO prices at or above $380B (or at a rumored $900B), the risk-reward for a 69-year-old retiree becomes structurally unfavorable. Watch the S-1 filing closely. Price matters more than story.</p>
   </div>
 
   <div class="sparring">
@@ -1025,41 +1430,37 @@ strong { color: var(--text); font-weight: 600; }
   </div>
 </section>
 
+<!-- DISCLAIMER -->
 <div class="disclaimer">
-  <div style="margin-bottom:8px;color:var(--muted);letter-spacing:1px;">IMPORTANT DISCLOSURES</div>
-  This report is prepared for informational purposes only and does not constitute investment advice, a solicitation, or an offer to buy or sell any security. All projections are modeled assumptions, not guarantees. Unverified figures are labeled throughout — cross-check all data points with primary sources before making any investment decision. Past performance of comparable companies does not predict future results. Private market investments carry substantial risk including total loss of capital. Consult a registered investment advisor, CPA, and estate attorney before proceeding with any investment in private securities. Anthropic's financial projections are management forecasts and have not been audited. The investor's specific tax situation may differ from assumptions herein.
+  <div style="color:rgba(250,249,245,0.45);letter-spacing:0.08em;font-size:9px;text-transform:uppercase;margin-bottom:10px;">Important Disclosures</div>
+  This report is prepared for informational purposes only and does not constitute investment advice, a solicitation, or an offer to buy or sell any security. All projections are modeled assumptions, not guarantees. Unverified figures are labeled throughout — cross-check all data points with primary sources before making any investment decision. Past performance of comparable companies does not predict future results. Private market investments carry substantial risk including total loss of capital. Consult a registered investment advisor, CPA, and estate attorney before proceeding. Anthropic's financial projections are management forecasts and have not been audited. The investor's specific tax situation may differ from assumptions herein.
 </div>
 
 </main>
 </div>
 
 <script>
-// ===== INTERSECTION OBSERVER — fade in sections =====
-const sections = document.querySelectorAll('.section');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.05, rootMargin: '0px 0px -60px 0px' });
-sections.forEach(s => observer.observe(s));
+// Fade-in on scroll
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.04, rootMargin: '0px 0px -40px 0px' }
+);
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+setTimeout(() => document.querySelectorAll('.section').forEach(s => s.classList.add('visible')), 80);
 
-// ===== ACTIVE NAV =====
+// Active nav on scroll
 const navItems = document.querySelectorAll('.nav-item');
-const sectionEls = document.querySelectorAll('section[id]');
+const sections = document.querySelectorAll('section[id]');
 
-function setActive() {
+function updateNav() {
   let current = '';
-  sectionEls.forEach(s => {
-    const top = s.getBoundingClientRect().top;
-    if (top <= 120) current = s.id;
-  });
+  sections.forEach(s => { if (s.getBoundingClientRect().top <= 100) current = s.id; });
   navItems.forEach(n => {
     n.classList.toggle('active', n.getAttribute('href') === '#' + current);
   });
 }
-window.addEventListener('scroll', setActive, { passive: true });
-setActive();
-
-// Force first section visible on load
-setTimeout(() => { sections.forEach(s => s.classList.add('visible')); }, 100);
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
 </script>
 </body>
 </html>
